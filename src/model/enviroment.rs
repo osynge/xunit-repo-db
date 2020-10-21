@@ -1,3 +1,4 @@
+use crate::model::keyvalue::KeyValueJson;
 use crate::model::project;
 use crate::schema::*;
 use serde::{Deserialize, Serialize};
@@ -24,8 +25,6 @@ pub struct EnviromentNew<'a> {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct EnviromentJson {
-    pub sk: String,
-    pub hash_keyvalue: String,
-    pub best_before: Option<i32>,
-    pub fk_project: i32,
+    pub sk: Option<String>,
+    pub key_value: Option<Vec<KeyValueJson>>,
 }

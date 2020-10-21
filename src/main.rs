@@ -25,6 +25,7 @@ async fn main() -> std::io::Result<()> {
             .data(database_pool.clone())
             .route("/", web::get().to(routes::home))
             .route("/project_add", web::post().to(routes::project_add))
+            .route("/keyvalue_add", web::post().to(routes::keyvalue_add))
     })
     .bind("127.0.0.1:8888")?
     .run()

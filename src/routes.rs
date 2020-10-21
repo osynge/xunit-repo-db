@@ -1,5 +1,7 @@
-use crate::model::project::{Project, ProjectJson, ProjectNew};
-use crate::plumbing::project;
+use crate::model::keyvalue::KeyValueJson;
+use crate::model::project::ProjectJson;
+use crate::plumbing::keyvalue::add_keyvalue;
+use crate::plumbing::project::add_project;
 use crate::Pool;
 
 use actix_web::http::StatusCode;
@@ -16,7 +18,17 @@ pub async fn project_add(
     pool: web::Data<Pool>,
     item: web::Json<ProjectJson>,
 ) -> Result<HttpResponse, Error> {
-    Ok(web::block(move || project::add_project(pool, item))
+    Ok(web::block(move || add_project(pool, item))
+        .await
+        .map(|project| HttpResponse::Created().json(project))
+        .map_err(|_| HttpResponse::InternalServerError())?)
+}
+
+pub async fn keyvalue_add(
+    pool: web::Data<Pool>,
+    item: web::Json<KeyValueJson>,
+) -> Result<HttpResponse, Error> {
+    Ok(web::block(move || add_keyvalue(pool, item))
         .await
         .map(|project| HttpResponse::Created().json(project))
         .map_err(|_| HttpResponse::InternalServerError())?)
