@@ -18,7 +18,7 @@ pub struct ProjectNew<'a> {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProjectJson {
-    pub sk: String,
-    pub identiifier: String,
-    pub human_name: String,
+    pub sk: Option<String>,
+    pub identiifier: Option<String>,
+    pub human_name: Option<String>,
 }
