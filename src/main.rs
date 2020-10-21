@@ -2,9 +2,9 @@
 extern crate diesel;
 
 mod model;
+mod plumbing;
 mod routes;
 mod schema;
-
 use actix_web::{web, App, HttpServer};
 use diesel::r2d2::{self, ConnectionManager};
 use diesel::SqliteConnection;
@@ -24,7 +24,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .data(database_pool.clone())
             .route("/", web::get().to(routes::home))
-            .route("/addlink", web::post().to(routes::add_link))
+            .route("/project_add", web::post().to(routes::project_add))
     })
     .bind("127.0.0.1:8888")?
     .run()
