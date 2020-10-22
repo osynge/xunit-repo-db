@@ -221,7 +221,7 @@ fn project_insert_identiifier(
 
 pub fn add_project(
     pool: web::Data<Pool>,
-    item: web::Json<ProjectJson>,
+    item: &ProjectJson,
 ) -> Result<Project, diesel::result::Error> {
     match (&item.sk, &item.identiifier, &item.human_name) {
         (Some(sk), Some(identiifier), Some(human_name)) => {

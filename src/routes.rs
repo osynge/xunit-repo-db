@@ -1,5 +1,7 @@
+use crate::model::enviroment::EnviromentJson;
 use crate::model::keyvalue::KeyValueJson;
 use crate::model::project::ProjectJson;
+use crate::plumbing::enviroment::add_enviroment;
 use crate::plumbing::keyvalue::add_keyvalue;
 use crate::plumbing::project::add_project;
 use crate::Pool;
@@ -18,7 +20,8 @@ pub async fn project_add(
     pool: web::Data<Pool>,
     item: web::Json<ProjectJson>,
 ) -> Result<HttpResponse, Error> {
-    Ok(web::block(move || add_project(pool, item))
+    let project = item.into_inner();
+    Ok(web::block(move || add_project(pool, &project))
         .await
         .map(|project| HttpResponse::Created().json(project))
         .map_err(|_| HttpResponse::InternalServerError())?)
@@ -28,7 +31,19 @@ pub async fn keyvalue_add(
     pool: web::Data<Pool>,
     item: web::Json<KeyValueJson>,
 ) -> Result<HttpResponse, Error> {
-    Ok(web::block(move || add_keyvalue(pool, item))
+    let keyvalue = item.into_inner();
+    Ok(web::block(move || add_keyvalue(pool, &keyvalue))
+        .await
+        .map(|project| HttpResponse::Created().json(project))
+        .map_err(|_| HttpResponse::InternalServerError())?)
+}
+
+pub async fn enviroment_add(
+    pool: web::Data<Pool>,
+    item: web::Json<EnviromentJson>,
+) -> Result<HttpResponse, Error> {
+    let enviroment = item.into_inner();
+    Ok(web::block(move || add_enviroment(pool, 1, &enviroment))
         .await
         .map(|project| HttpResponse::Created().json(project))
         .map_err(|_| HttpResponse::InternalServerError())?)

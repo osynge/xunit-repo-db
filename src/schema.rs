@@ -1,8 +1,8 @@
 table! {
     bind_enviroment_keyvalue (id) {
         id -> Integer,
-        fk_enviroment -> Nullable<Integer>,
-        fk_keyvalue -> Nullable<Integer>,
+        fk_enviroment -> Integer,
+        fk_keyvalue -> Integer,
     }
 }
 
@@ -39,7 +39,7 @@ table! {
         sk -> Text,
         client_identifier -> Text,
         created -> Nullable<Integer>,
-        fk_project -> Nullable<Integer>,
+        fk_project -> Integer,
     }
 }
 
@@ -58,7 +58,7 @@ table! {
         failure_description -> Nullable<Text>,
         system_out -> Nullable<Text>,
         system_err -> Nullable<Text>,
-        fk_test_run -> Nullable<Integer>,
+        fk_test_run -> Integer,
     }
 }
 
@@ -68,8 +68,8 @@ table! {
         sk -> Text,
         client_identifier -> Text,
         created -> Nullable<Integer>,
-        fk_run_identifier -> Nullable<Integer>,
-        fk_enviroment -> Nullable<Integer>,
+        fk_run_identifier -> Integer,
+        fk_enviroment -> Integer,
     }
 }
 

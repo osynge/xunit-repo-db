@@ -15,7 +15,7 @@ pub struct KeyValueNew<'a> {
     pub value: &'a str,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Eq, Ord, PartialEq, PartialOrd, Hash)]
 pub struct KeyValueJson {
     pub key: String,
     pub value: String,

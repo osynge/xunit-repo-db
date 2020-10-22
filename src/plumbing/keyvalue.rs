@@ -4,15 +4,13 @@ use actix_web::web;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
-use uuid::Uuid;
 
 pub fn add_keyvalue(
     pool: web::Data<Pool>,
-    item: web::Json<KeyValueJson>,
+    item: &KeyValueJson,
 ) -> Result<KeyValue, diesel::result::Error> {
     use crate::schema::keyvalue::dsl::*;
     let db_connection = pool.get().unwrap();
-
     match keyvalue
         .filter(key.eq(&item.key))
         .filter(value.eq(&item.value))

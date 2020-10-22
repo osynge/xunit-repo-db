@@ -1,3 +1,4 @@
+PRAGMA foreign_keys = ON;
 /*
  Typically map 1:1 to a git repo
  */
@@ -37,8 +38,8 @@ CREATE TABLE keyvalue (
  */
 CREATE TABLE bind_enviroment_keyvalue (
     id INTEGER PRIMARY KEY NOT NULL,
-    fk_enviroment INTEGER,
-    fk_keyvalue INTEGER,
+    fk_enviroment INTEGER NOT NULL,
+    fk_keyvalue INTEGER NOT NULL,
     FOREIGN KEY (fk_enviroment) REFERENCES enviroment (id) ON DELETE CASCADE ON UPDATE NO ACTION,
     FOREIGN KEY (fk_keyvalue) REFERENCES keyvalue (id) ON DELETE CASCADE ON UPDATE NO ACTION,
     UNIQUE (fk_enviroment, fk_keyvalue) ON CONFLICT ABORT
@@ -55,7 +56,7 @@ CREATE TABLE run_identifier (
      */
     client_identifier CHARACTER(32) NOT NULL,
     created INT,
-    fk_project INTEGER,
+    fk_project INTEGER NOT NULL,
     FOREIGN KEY (fk_project) REFERENCES project (id) ON DELETE CASCADE ON UPDATE NO ACTION,
     UNIQUE (sk, fk_project) ON CONFLICT ABORT
 );
@@ -71,8 +72,8 @@ CREATE TABLE test_run (
      */
     client_identifier CHARACTER(32) NOT NULL,
     created INT,
-    fk_run_identifier INTEGER,
-    fk_enviroment INTEGER,
+    fk_run_identifier INTEGER NOT NULL,
+    fk_enviroment INTEGER NOT NULL,
     FOREIGN KEY (fk_enviroment) REFERENCES enviroment (id) ON DELETE CASCADE ON UPDATE NO ACTION,
     FOREIGN KEY (fk_run_identifier) REFERENCES run_identifier (id) ON DELETE CASCADE ON UPDATE NO ACTION
 );
@@ -98,6 +99,6 @@ CREATE TABLE test_case (
     failure_description TEXT,
     system_out TEXT,
     system_err TEXT,
-    fk_test_run INTEGER,
+    fk_test_run INTEGER NOT NULL,
     FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION
 );
