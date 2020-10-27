@@ -1,5 +1,7 @@
+use crate::model::bind_enviroment_keyvalue::BindEnviromentKeyvalueJson;
 use crate::model::enviroment::{Enviroment, EnviromentJson, EnviromentNew};
 use crate::model::keyvalue::KeyValueJson;
+use crate::plumbing::bind_enviroment_keyvalue::add_bind_enviroment_keyvalue;
 use crate::plumbing::keyvalue::add_keyvalue;
 use crate::Pool;
 use actix_web::web;
@@ -107,48 +109,61 @@ fn keyvalue_hash_gen(keyvalue: &Vec<KeyValueJson>) -> String {
     hasher.finish().to_string()
 }
 
+fn insert_enviroment(
+    pool: web::Data<Pool>,
+    fk_project: i32,
+    sk: &String,
+    keyvalue: &Vec<KeyValueJson>,
+    keyvalue_hash: &String,
+) -> Result<Enviroment, diesel::result::Error> {
+    let keyvalue_hash = keyvalue_hash_gen(keyvalue);
+
+    let insert = enviroment_insert_sk_hash_keyvalue(pool.clone(), fk_project, &sk, &keyvalue_hash);
+    match insert {
+        Ok(env) => {
+            for ding in keyvalue.into_iter() {
+                let added_kv = match add_keyvalue(pool.clone(), ding) {
+                    Ok(p) => p.id,
+                    Err(p) => {
+                        return Err(p);
+                    }
+                };
+                let new = BindEnviromentKeyvalueJson {
+                    fk_enviroment: env.id,
+                    fk_keyvalue: added_kv,
+                };
+                match add_bind_enviroment_keyvalue(pool.clone(), &new) {
+                    Ok(_) => {}
+                    Err(anerr) => return Err(anerr),
+                }
+            }
+            Ok(env)
+        }
+        Err(p) => Err(p),
+    }
+}
+
 pub fn add_enviroment(
     pool: web::Data<Pool>,
     fk_project: i32,
     item: &EnviromentJson,
 ) -> Result<Enviroment, diesel::result::Error> {
-    let mut keyvalue_hash = match &item.key_value {
-        Some(p) => Some((keyvalue_hash_gen(p), p)),
-        None => None,
-    };
-    match (&item.sk, &keyvalue_hash) {
-        (Some(sk), Some((hash_keyvalue, kv))) => {
-            match enviroment_get_by_sk_hash_keyvalue(pool.clone(), fk_project, &sk, &hash_keyvalue)
+    match (&item.sk, &item.key_value) {
+        (Some(sk), Some(kv)) => {
+            let keyvalue_hash = keyvalue_hash_gen(kv);
+            match enviroment_get_by_sk_hash_keyvalue(pool.clone(), fk_project, &sk, &keyvalue_hash)
             {
                 Ok(p) => Ok(p),
-                Err(_) => {
-                    let insert = enviroment_insert_sk_hash_keyvalue(
-                        pool.clone(),
-                        fk_project,
-                        &sk,
-                        &hash_keyvalue,
-                    );
-
-                    match insert {
-                        Ok(p) => {
-                            for ding in kv.into_iter() {
-                                match add_keyvalue(pool.clone(), ding) {
-                                    Ok(p) => {}
-                                    Err(p) => {}
-                                }
-                            }
-                            Ok(p)
-                        }
-                        Err(p) => Err(p),
-                    }
-                }
+                Err(_) => insert_enviroment(pool.clone(), fk_project, sk, kv, &keyvalue_hash),
             }
         }
 
-        (None, Some((hash_keyvalue, kv))) => {
-            match enviroment_get_by_hash_keyvalue(pool.clone(), fk_project, &hash_keyvalue) {
+        (None, Some(kv)) => {
+            let sk = Uuid::new_v4().to_string();
+            let keyvalue_hash = keyvalue_hash_gen(kv);
+            match enviroment_get_by_hash_keyvalue(pool.clone(), fk_project, &keyvalue_hash) {
                 Ok(p) => Ok(p),
-                Err(_) => enviroment_insert_hash_keyvalue(pool.clone(), fk_project, &hash_keyvalue),
+                Err(_) => insert_enviroment(pool.clone(), fk_project, &sk, kv, &keyvalue_hash),
             }
         }
         (None, None) => Err(diesel::result::Error::NotFound),
