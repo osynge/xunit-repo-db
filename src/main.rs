@@ -28,6 +28,10 @@ async fn main() -> std::io::Result<()> {
             .route("/keyvalue_add", web::post().to(routes::keyvalue_add))
             .route("/enviroment_add", web::post().to(routes::enviroment_add))
             .route("/run_add", web::post().to(routes::run_add))
+            .route(
+                "/test_case_error_add",
+                web::post().to(routes::test_case_error_add),
+            )
     })
     .bind("127.0.0.1:8888")?
     .run()

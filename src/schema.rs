@@ -44,20 +44,42 @@ table! {
 }
 
 table! {
-    test_case (id) {
+    test_case_error (id) {
         id -> Integer,
         name -> Text,
         classname -> Text,
         time -> Nullable<Integer>,
-        skipped_message -> Nullable<Text>,
         error_message -> Nullable<Text>,
         error_type -> Nullable<Text>,
         error_description -> Nullable<Text>,
+        system_out -> Nullable<Text>,
+        system_err -> Nullable<Text>,
+        fk_test_run -> Integer,
+    }
+}
+
+table! {
+    test_case_failure (id) {
+        id -> Integer,
+        name -> Text,
+        classname -> Text,
+        time -> Nullable<Integer>,
         failure_message -> Nullable<Text>,
         failure_type -> Nullable<Text>,
         failure_description -> Nullable<Text>,
         system_out -> Nullable<Text>,
         system_err -> Nullable<Text>,
+        fk_test_run -> Integer,
+    }
+}
+
+table! {
+    test_case_skipped (id) {
+        id -> Integer,
+        name -> Text,
+        classname -> Text,
+        time -> Nullable<Integer>,
+        skipped_message -> Nullable<Text>,
         fk_test_run -> Integer,
     }
 }
@@ -77,7 +99,9 @@ joinable!(bind_enviroment_keyvalue -> enviroment (fk_enviroment));
 joinable!(bind_enviroment_keyvalue -> keyvalue (fk_keyvalue));
 joinable!(enviroment -> project (fk_project));
 joinable!(run_identifier -> project (fk_project));
-joinable!(test_case -> test_run (fk_test_run));
+joinable!(test_case_error -> test_run (fk_test_run));
+joinable!(test_case_failure -> test_run (fk_test_run));
+joinable!(test_case_skipped -> test_run (fk_test_run));
 joinable!(test_run -> enviroment (fk_enviroment));
 joinable!(test_run -> run_identifier (fk_run_identifier));
 
@@ -87,6 +111,8 @@ allow_tables_to_appear_in_same_query!(
     keyvalue,
     project,
     run_identifier,
-    test_case,
+    test_case_error,
+    test_case_failure,
+    test_case_skipped,
     test_run,
 );

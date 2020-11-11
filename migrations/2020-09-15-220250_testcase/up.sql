@@ -82,7 +82,7 @@ CREATE TABLE test_run (
  Allows grouping of many enviroments in a single run
  this maybe shared across enviroments but not projects
  */
-CREATE TABLE test_case (
+CREATE TABLE test_case_skipped (
     id INTEGER PRIMARY KEY NOT NULL,
     /* Client identifier
      for example GIT_COMMIT + CI/CD BUILD_NUMBER
@@ -92,9 +92,43 @@ CREATE TABLE test_case (
     /* Number of seconds to run */
     time INTEGER,
     skipped_message TEXT,
+    fk_test_run INTEGER NOT NULL,
+    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+/*
+ Allows grouping of many enviroments in a single run
+ this maybe shared across enviroments but not projects
+ */
+CREATE TABLE test_case_error (
+    id INTEGER PRIMARY KEY NOT NULL,
+    /* Client identifier
+     for example GIT_COMMIT + CI/CD BUILD_NUMBER
+     */
+    name TEXT NOT NULL,
+    classname TEXT NOT NULL,
+    /* Number of seconds to run */
+    time INTEGER,
     error_message TEXT,
     error_type TEXT,
     error_description TEXT,
+    system_out TEXT,
+    system_err TEXT,
+    fk_test_run INTEGER NOT NULL,
+    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+/*
+ Allows grouping of many enviroments in a single run
+ this maybe shared across enviroments but not projects
+ */
+CREATE TABLE test_case_failure (
+    id INTEGER PRIMARY KEY NOT NULL,
+    /* Client identifier
+     for example GIT_COMMIT + CI/CD BUILD_NUMBER
+     */
+    name TEXT NOT NULL,
+    classname TEXT NOT NULL,
+    /* Number of seconds to run */
+    time INTEGER,
     failure_message TEXT,
     failure_type TEXT,
     failure_description TEXT,
