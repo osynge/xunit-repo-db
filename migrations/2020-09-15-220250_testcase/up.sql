@@ -93,7 +93,9 @@ CREATE TABLE test_case_skipped (
     time INTEGER,
     skipped_message TEXT,
     fk_test_run INTEGER NOT NULL,
-    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION
+    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    UNIQUE (name, fk_test_run) ON CONFLICT ABORT,
+    UNIQUE (classname, fk_test_run) ON CONFLICT ABORT
 );
 /*
  Allows grouping of many enviroments in a single run
@@ -114,7 +116,9 @@ CREATE TABLE test_case_error (
     system_out TEXT,
     system_err TEXT,
     fk_test_run INTEGER NOT NULL,
-    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION
+    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    UNIQUE (name, fk_test_run) ON CONFLICT ABORT,
+    UNIQUE (classname, fk_test_run) ON CONFLICT ABORT
 );
 /*
  Allows grouping of many enviroments in a single run
@@ -135,5 +139,7 @@ CREATE TABLE test_case_failure (
     system_out TEXT,
     system_err TEXT,
     fk_test_run INTEGER NOT NULL,
-    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION
+    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    UNIQUE (name, fk_test_run) ON CONFLICT ABORT,
+    UNIQUE (classname, fk_test_run) ON CONFLICT ABORT
 );
