@@ -38,7 +38,7 @@ table! {
         id -> Integer,
         sk -> Text,
         client_identifier -> Text,
-        created -> Nullable<Integer>,
+        created -> BigInt,
         fk_project -> Integer,
     }
 }
@@ -67,7 +67,7 @@ table! {
         id -> Integer,
         sk -> Text,
         client_identifier -> Text,
-        created -> Nullable<Integer>,
+        created -> BigInt,
         fk_run_identifier -> Integer,
         fk_enviroment -> Integer,
     }

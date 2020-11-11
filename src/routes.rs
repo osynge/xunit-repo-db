@@ -1,9 +1,11 @@
 use crate::model::enviroment::EnviromentJson;
 use crate::model::keyvalue::KeyValueJson;
 use crate::model::project::ProjectJson;
+use crate::model::run_identifier::RunIdentifierJson;
 use crate::plumbing::enviroment::add_enviroment;
 use crate::plumbing::keyvalue::add_keyvalue;
 use crate::plumbing::project::add_project;
+use crate::plumbing::run_identifier::add_run_identifier;
 use crate::Pool;
 
 use actix_web::http::StatusCode;
@@ -47,6 +49,19 @@ pub async fn enviroment_add(
         .await
         .map(|project| HttpResponse::Created().json(project))
         .map_err(|_| HttpResponse::InternalServerError())?)
+}
+
+pub async fn run_add(
+    pool: web::Data<Pool>,
+    item: web::Json<RunIdentifierJson>,
+) -> Result<HttpResponse, Error> {
+    let run_identifier = item.into_inner();
+    Ok(
+        web::block(move || add_run_identifier(pool, 1, &run_identifier))
+            .await
+            .map(|project| HttpResponse::Created().json(project))
+            .map_err(|_| HttpResponse::InternalServerError())?,
+    )
 }
 
 #[cfg(test)]

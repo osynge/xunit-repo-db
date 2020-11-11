@@ -21,7 +21,7 @@ pub struct TestRun {
 pub struct TestRunNew<'a> {
     pub sk: &'a str,
     pub client_identifier: &'a str,
-    pub created: i32,
+    pub created: i64,
     pub fk_run_identifier: i32,
     pub fk_enviroment: i32,
 }
