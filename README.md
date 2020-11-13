@@ -28,3 +28,4 @@ curl -v -X POST -d '{ "name" : "name" , "classname" : "classname", "time" : 1, "
 
 curl -v -X POST -d '{ "name" : "name" , "classname" : "classname", "time" : 1, "skipped_message" : "edddddrror_type" }' -H 'Content-Type: application/json' http://127.0.0.1:8888/test_case_skipped_add
 
+curl -v -X POST -d '{ "name" : "namedddasas" , "classname" : "classnameddddassas", "time" : 1  }' -H 'Content-Type: application/json' http://127.0.0.1:8888/test_case_pass_add

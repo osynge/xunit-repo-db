@@ -82,6 +82,24 @@ CREATE TABLE test_run (
  Allows grouping of many enviroments in a single run
  this maybe shared across enviroments but not projects
  */
+CREATE TABLE test_case_pass (
+    id INTEGER PRIMARY KEY NOT NULL,
+    /* Client identifier
+     for example GIT_COMMIT + CI/CD BUILD_NUMBER
+     */
+    name TEXT NOT NULL,
+    classname TEXT NOT NULL,
+    /* Number of seconds to run */
+    time INTEGER,
+    fk_test_run INTEGER NOT NULL,
+    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    UNIQUE (name, fk_test_run) ON CONFLICT ABORT,
+    UNIQUE (classname, fk_test_run) ON CONFLICT ABORT
+);
+/*
+ Allows grouping of many enviroments in a single run
+ this maybe shared across enviroments but not projects
+ */
 CREATE TABLE test_case_skipped (
     id INTEGER PRIMARY KEY NOT NULL,
     /* Client identifier

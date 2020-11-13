@@ -74,6 +74,16 @@ table! {
 }
 
 table! {
+    test_case_pass (id) {
+        id -> Integer,
+        name -> Text,
+        classname -> Text,
+        time -> Nullable<Integer>,
+        fk_test_run -> Integer,
+    }
+}
+
+table! {
     test_case_skipped (id) {
         id -> Integer,
         name -> Text,
@@ -101,6 +111,7 @@ joinable!(enviroment -> project (fk_project));
 joinable!(run_identifier -> project (fk_project));
 joinable!(test_case_error -> test_run (fk_test_run));
 joinable!(test_case_failure -> test_run (fk_test_run));
+joinable!(test_case_pass -> test_run (fk_test_run));
 joinable!(test_case_skipped -> test_run (fk_test_run));
 joinable!(test_run -> enviroment (fk_enviroment));
 joinable!(test_run -> run_identifier (fk_run_identifier));
@@ -113,6 +124,7 @@ allow_tables_to_appear_in_same_query!(
     run_identifier,
     test_case_error,
     test_case_failure,
+    test_case_pass,
     test_case_skipped,
     test_run,
 );
