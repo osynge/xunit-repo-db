@@ -36,6 +36,10 @@ async fn main() -> std::io::Result<()> {
                 "/test_case_failure_add",
                 web::post().to(routes::test_case_failure_add),
             )
+            .route(
+                "/test_case_skipped_add",
+                web::post().to(routes::test_case_skipped_add),
+            )
     })
     .bind("127.0.0.1:8888")?
     .run()

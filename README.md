@@ -25,3 +25,6 @@ curl -v -X POST -d '{ "name" : "name" , "classname" : "classname", "time" : 1, "
 
 
 curl -v -X POST -d '{ "name" : "name" , "classname" : "classname", "time" : 1, "failure_type" : "edddddrror_type", "failure_message" : "failure_message", "failure_description" : "failure_description", "system_out": "system_out", "system_err" :"system_err" }' -H 'Content-Type: application/json' http://127.0.0.1:8888/test_case_failure_add
+
+curl -v -X POST -d '{ "name" : "name" , "classname" : "classname", "time" : 1, "skipped_message" : "edddddrror_type" }' -H 'Content-Type: application/json' http://127.0.0.1:8888/test_case_skipped_add
+

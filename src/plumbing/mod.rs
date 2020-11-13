@@ -5,3 +5,4 @@ pub mod project;
 pub mod run_identifier;
 pub mod test_case_error;
 pub mod test_case_failure;
+pub mod test_case_skipped;

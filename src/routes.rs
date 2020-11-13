@@ -4,12 +4,14 @@ use crate::model::project::ProjectJson;
 use crate::model::run_identifier::RunIdentifierJson;
 use crate::model::test_case_error::TestCaseErrorJson;
 use crate::model::test_case_failure::TestCaseFailureJson;
+use crate::model::test_case_skipped::TestCaseSkippedJson;
 use crate::plumbing::enviroment::add_enviroment;
 use crate::plumbing::keyvalue::add_keyvalue;
 use crate::plumbing::project::add_project;
 use crate::plumbing::run_identifier::add_run_identifier;
 use crate::plumbing::test_case_error::add_test_case_error;
 use crate::plumbing::test_case_failure::add_test_case_failure;
+use crate::plumbing::test_case_skipped::add_test_case_skipped;
 use crate::Pool;
 
 use actix_web::http::StatusCode;
@@ -88,6 +90,19 @@ pub async fn test_case_failure_add(
     let run_identifier = item.into_inner();
     Ok(
         web::block(move || add_test_case_failure(pool, 1, &run_identifier))
+            .await
+            .map(|project| HttpResponse::Created().json(project))
+            .map_err(|_| HttpResponse::InternalServerError())?,
+    )
+}
+
+pub async fn test_case_skipped_add(
+    pool: web::Data<Pool>,
+    item: web::Json<TestCaseSkippedJson>,
+) -> Result<HttpResponse, Error> {
+    let run_identifier = item.into_inner();
+    Ok(
+        web::block(move || add_test_case_skipped(pool, 1, &run_identifier))
             .await
             .map(|project| HttpResponse::Created().json(project))
             .map_err(|_| HttpResponse::InternalServerError())?,
