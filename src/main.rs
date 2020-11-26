@@ -1,10 +1,10 @@
 #[macro_use]
 extern crate diesel;
-
 mod model;
 mod plumbing;
 mod routes;
 mod schema;
+use xunit_repo_interface;
 use actix_web::{web, App, HttpServer};
 use diesel::r2d2::{self, ConnectionManager};
 use diesel::SqliteConnection;
