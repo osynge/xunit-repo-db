@@ -14,6 +14,7 @@ use crate::plumbing::test_case_error::add_test_case_error;
 use crate::plumbing::test_case_failure::add_test_case_failure;
 use crate::plumbing::test_case_pass::add_test_case_pass;
 use crate::plumbing::test_case_skipped::add_test_case_skipped;
+use crate::plumbing::upload::get_upload;
 use crate::Pool;
 
 use actix_web::http::StatusCode;
@@ -118,6 +119,19 @@ pub async fn test_case_pass_add(
     let run_identifier = item.into_inner();
     Ok(
         web::block(move || add_test_case_pass(pool, 1, &run_identifier))
+            .await
+            .map(|project| HttpResponse::Created().json(project))
+            .map_err(|_| HttpResponse::InternalServerError())?,
+    )
+}
+
+pub async fn upload(
+    pool: web::Data<Pool>,
+    item: web::Json<xunit_repo_interface::Upload>,
+) -> Result<HttpResponse, Error> {
+    let run_identifier = item.into_inner();
+    Ok(
+        web::block(move || get_upload(pool,  &run_identifier))
             .await
             .map(|project| HttpResponse::Created().json(project))
             .map_err(|_| HttpResponse::InternalServerError())?,

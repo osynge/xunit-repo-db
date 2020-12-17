@@ -7,3 +7,4 @@ pub mod test_case_error;
 pub mod test_case_failure;
 pub mod test_case_pass;
 pub mod test_case_skipped;
+pub mod upload;
