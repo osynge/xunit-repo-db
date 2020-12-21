@@ -221,9 +221,11 @@ fn project_insert_identiifier(
 
 pub fn add_project(
     pool: web::Data<Pool>,
-    item: &ProjectJson,
+    sk: Option<&String>,
+    identiifier: Option<&String>,
+    human_name: Option<&String>,
 ) -> Result<Project, diesel::result::Error> {
-    match (&item.sk, &item.identiifier, &item.human_name) {
+    match (sk, identiifier, human_name) {
         (Some(sk), Some(identiifier), Some(human_name)) => {
             match project_get_by_sk_identiifier_humanname(
                 pool.clone(),
@@ -266,9 +268,9 @@ pub fn add_project(
             Err(_) => project_insert_humanname(pool.clone(), &human_name),
         },
         (None, Some(identiifier), None) => {
-            match project_get_by_identiifier(pool.clone(), &identiifier) {
+            match project_get_by_identiifier(pool.clone(), identiifier) {
                 Ok(p) => Ok(p),
-                Err(_) => project_insert_identiifier(pool.clone(), &identiifier),
+                Err(_) => project_insert_identiifier(pool.clone(), identiifier),
             }
         }
         (None, None, None) => Err(diesel::result::Error::NotFound),

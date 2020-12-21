@@ -4,10 +4,10 @@ mod model;
 mod plumbing;
 mod routes;
 mod schema;
-use xunit_repo_interface;
 use actix_web::{web, App, HttpServer};
 use diesel::r2d2::{self, ConnectionManager};
 use diesel::SqliteConnection;
+use xunit_repo_interface;
 
 pub type Pool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
@@ -44,10 +44,7 @@ async fn main() -> std::io::Result<()> {
                 "/test_case_pass_add",
                 web::post().to(routes::test_case_pass_add),
             )
-            .route(
-                "/upload",
-                web::post().to(routes::upload),
-            )
+            .route("/upload", web::post().to(routes::upload))
     })
     .bind("127.0.0.1:8888")?
     .run()

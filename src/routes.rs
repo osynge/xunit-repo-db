@@ -32,10 +32,17 @@ pub async fn project_add(
     item: web::Json<ProjectJson>,
 ) -> Result<HttpResponse, Error> {
     let project = item.into_inner();
-    Ok(web::block(move || add_project(pool, &project))
-        .await
-        .map(|project| HttpResponse::Created().json(project))
-        .map_err(|_| HttpResponse::InternalServerError())?)
+    Ok(web::block(move || {
+        add_project(
+            pool,
+            project.sk.as_ref(),
+            project.identiifier.as_ref(),
+            project.human_name.as_ref(),
+        )
+    })
+    .await
+    .map(|project| HttpResponse::Created().json(project))
+    .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
 pub async fn keyvalue_add(
@@ -130,12 +137,10 @@ pub async fn upload(
     item: web::Json<xunit_repo_interface::Upload>,
 ) -> Result<HttpResponse, Error> {
     let run_identifier = item.into_inner();
-    Ok(
-        web::block(move || get_upload(pool,  &run_identifier))
-            .await
-            .map(|project| HttpResponse::Created().json(project))
-            .map_err(|_| HttpResponse::InternalServerError())?,
-    )
+    Ok(web::block(move || get_upload(pool, &run_identifier))
+        .await
+        .map(|project| HttpResponse::Created().json(project))
+        .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
 #[cfg(test)]
