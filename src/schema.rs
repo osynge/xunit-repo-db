@@ -48,7 +48,7 @@ table! {
         id -> Integer,
         name -> Text,
         classname -> Text,
-        time -> Nullable<Integer>,
+        time -> Nullable<Float>,
         error_message -> Nullable<Text>,
         error_type -> Nullable<Text>,
         error_description -> Nullable<Text>,
@@ -63,7 +63,7 @@ table! {
         id -> Integer,
         name -> Text,
         classname -> Text,
-        time -> Nullable<Integer>,
+        time -> Nullable<Float>,
         failure_message -> Nullable<Text>,
         failure_type -> Nullable<Text>,
         failure_description -> Nullable<Text>,
@@ -78,7 +78,7 @@ table! {
         id -> Integer,
         name -> Text,
         classname -> Text,
-        time -> Nullable<Integer>,
+        time -> Nullable<Float>,
         fk_test_run -> Integer,
     }
 }
@@ -88,7 +88,7 @@ table! {
         id -> Integer,
         name -> Text,
         classname -> Text,
-        time -> Nullable<Integer>,
+        time -> Nullable<Float>,
         skipped_message -> Nullable<Text>,
         fk_test_run -> Integer,
     }

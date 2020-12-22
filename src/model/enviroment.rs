@@ -2,6 +2,7 @@ use crate::model::keyvalue::KeyValueJson;
 use crate::model::project;
 use crate::schema::*;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[table_name = "enviroment"]
@@ -26,5 +27,5 @@ pub struct EnviromentNew<'a> {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct EnviromentJson {
     pub sk: Option<String>,
-    pub key_value: Option<Vec<KeyValueJson>>,
+    pub key_value: Option<HashMap<String, String>>,
 }

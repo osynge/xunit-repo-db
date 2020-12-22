@@ -90,7 +90,7 @@ CREATE TABLE test_case_pass (
     name TEXT NOT NULL,
     classname TEXT NOT NULL,
     /* Number of seconds to run */
-    time INTEGER,
+    time REAL,
     fk_test_run INTEGER NOT NULL,
     FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
     UNIQUE (name, fk_test_run) ON CONFLICT ABORT,
@@ -108,7 +108,7 @@ CREATE TABLE test_case_skipped (
     name TEXT NOT NULL,
     classname TEXT NOT NULL,
     /* Number of seconds to run */
-    time INTEGER,
+    time REAL,
     skipped_message TEXT,
     fk_test_run INTEGER NOT NULL,
     FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
@@ -127,7 +127,7 @@ CREATE TABLE test_case_error (
     name TEXT NOT NULL,
     classname TEXT NOT NULL,
     /* Number of seconds to run */
-    time INTEGER,
+    time REAL,
     error_message TEXT,
     error_type TEXT,
     error_description TEXT,
@@ -150,7 +150,7 @@ CREATE TABLE test_case_failure (
     name TEXT NOT NULL,
     classname TEXT NOT NULL,
     /* Number of seconds to run */
-    time INTEGER,
+    time REAL,
     failure_message TEXT,
     failure_type TEXT,
     failure_description TEXT,

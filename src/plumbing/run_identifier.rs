@@ -74,14 +74,16 @@ fn insert_run_identifier(
 pub fn add_run_identifier(
     pool: web::Data<Pool>,
     fk_project: i32,
-    item: &RunIdentifierJson,
+    run_sk: Option<&String>,
+    run_client_identifier: Option<&String>,
+    run_created: Option<i64>,
 ) -> Result<RunIdentifier, diesel::result::Error> {
-    let created = match item.created {
+    let created = match run_created {
         Some(p) => p,
         None => Utc::now().timestamp(),
     };
 
-    match (&item.sk, &item.client_identifier) {
+    match (run_sk, run_client_identifier) {
         (Some(sk), Some(client_identifier)) => {
             match run_identifier_get_by_sk_client_identifier(
                 pool.clone(),

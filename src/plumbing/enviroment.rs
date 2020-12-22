@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::model::bind_enviroment_keyvalue::BindEnviromentKeyvalueJson;
 use crate::model::enviroment::{Enviroment, EnviromentJson, EnviromentNew};
 use crate::model::keyvalue::KeyValueJson;
@@ -98,8 +100,8 @@ fn enviroment_insert_hash_keyvalue(
     Ok(result)
 }
 
-fn keyvalue_hash_gen(keyvalue: &Vec<KeyValueJson>) -> String {
-    let mut sorted: Vec<KeyValueJson> = keyvalue.to_vec();
+fn keyvalue_hash_gen(keyvalue: &HashMap<String, String>) -> String {
+    let mut sorted: Vec<_> = keyvalue.iter().collect();
     sorted.sort();
     use std::collections::hash_map::DefaultHasher;
     use std::hash::{Hash, Hasher};
@@ -113,7 +115,7 @@ fn insert_enviroment(
     pool: web::Data<Pool>,
     fk_project: i32,
     sk: &String,
-    keyvalue: &Vec<KeyValueJson>,
+    keyvalue: &HashMap<String, String>,
     keyvalue_hash: &String,
 ) -> Result<Enviroment, diesel::result::Error> {
     let keyvalue_hash = keyvalue_hash_gen(keyvalue);
@@ -121,8 +123,8 @@ fn insert_enviroment(
     let insert = enviroment_insert_sk_hash_keyvalue(pool.clone(), fk_project, &sk, &keyvalue_hash);
     match insert {
         Ok(env) => {
-            for ding in keyvalue.into_iter() {
-                let added_kv = match add_keyvalue(pool.clone(), ding) {
+            for (key, value) in keyvalue.into_iter() {
+                let added_kv = match add_keyvalue(pool.clone(), key, value) {
                     Ok(p) => p.id,
                     Err(p) => {
                         return Err(p);
@@ -146,9 +148,10 @@ fn insert_enviroment(
 pub fn add_enviroment(
     pool: web::Data<Pool>,
     fk_project: i32,
-    item: &EnviromentJson,
+    enviroment_sk: Option<&String>,
+    enviroment_key_value: Option<&HashMap<String, String>>,
 ) -> Result<Enviroment, diesel::result::Error> {
-    match (&item.sk, &item.key_value) {
+    match (enviroment_sk, enviroment_key_value) {
         (Some(sk), Some(kv)) => {
             let keyvalue_hash = keyvalue_hash_gen(kv);
             match enviroment_get_by_sk_hash_keyvalue(pool.clone(), fk_project, &sk, &keyvalue_hash)

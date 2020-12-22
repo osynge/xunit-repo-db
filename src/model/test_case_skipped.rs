@@ -9,7 +9,7 @@ pub struct TestCaseSkipped {
     pub id: i32,
     pub name: String,
     pub classname: String,
-    pub time: Option<i32>,
+    pub time: Option<f32>,
     pub skipped_message: Option<String>,
     pub fk_test_run: i32,
 }
@@ -19,7 +19,7 @@ pub struct TestCaseSkipped {
 pub struct TestCaseSkippedNew<'a> {
     pub name: &'a str,
     pub classname: &'a str,
-    pub time: Option<i32>,
+    pub time: Option<f32>,
     pub skipped_message: Option<&'a str>,
     pub fk_test_run: i32,
 }
@@ -28,6 +28,6 @@ pub struct TestCaseSkippedNew<'a> {
 pub struct TestCaseSkippedJson {
     pub name: String,
     pub classname: String,
-    pub time: Option<i32>,
+    pub time: Option<f32>,
     pub skipped_message: Option<String>,
 }

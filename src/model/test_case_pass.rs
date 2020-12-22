@@ -9,7 +9,7 @@ pub struct TestCasePass {
     pub id: i32,
     pub name: String,
     pub classname: String,
-    pub time: Option<i32>,
+    pub time: Option<f32>,
     pub fk_test_run: i32,
 }
 
@@ -18,7 +18,7 @@ pub struct TestCasePass {
 pub struct TestCasePassNew<'a> {
     pub name: &'a str,
     pub classname: &'a str,
-    pub time: Option<i32>,
+    pub time: Option<f32>,
     pub fk_test_run: i32,
 }
 
@@ -26,5 +26,5 @@ pub struct TestCasePassNew<'a> {
 pub struct TestCasePassJson {
     pub name: String,
     pub classname: String,
-    pub time: Option<i32>,
+    pub time: Option<f32>,
 }

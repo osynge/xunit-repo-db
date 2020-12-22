@@ -7,20 +7,22 @@ use diesel::RunQueryDsl;
 
 pub fn add_keyvalue(
     pool: web::Data<Pool>,
-    item: &KeyValueJson,
+
+    new_key: &String,
+    new_value: &String,
 ) -> Result<KeyValue, diesel::result::Error> {
     use crate::schema::keyvalue::dsl::*;
     let db_connection = pool.get().unwrap();
     match keyvalue
-        .filter(key.eq(&item.key))
-        .filter(value.eq(&item.value))
+        .filter(key.eq(key))
+        .filter(value.eq(value))
         .first::<KeyValue>(&db_connection)
     {
         Ok(result) => Ok(result),
         Err(_) => {
             let new_keyvalue = KeyValueNew {
-                key: &item.key,
-                value: &item.value,
+                key: &new_key.clone(),
+                value: &new_value.clone(),
             };
 
             insert_into(keyvalue)

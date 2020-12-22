@@ -50,10 +50,12 @@ pub async fn keyvalue_add(
     item: web::Json<KeyValueJson>,
 ) -> Result<HttpResponse, Error> {
     let keyvalue = item.into_inner();
-    Ok(web::block(move || add_keyvalue(pool, &keyvalue))
-        .await
-        .map(|project| HttpResponse::Created().json(project))
-        .map_err(|_| HttpResponse::InternalServerError())?)
+    Ok(
+        web::block(move || add_keyvalue(pool, &keyvalue.key, &keyvalue.value))
+            .await
+            .map(|project| HttpResponse::Created().json(project))
+            .map_err(|_| HttpResponse::InternalServerError())?,
+    )
 }
 
 pub async fn enviroment_add(
@@ -61,10 +63,17 @@ pub async fn enviroment_add(
     item: web::Json<EnviromentJson>,
 ) -> Result<HttpResponse, Error> {
     let enviroment = item.into_inner();
-    Ok(web::block(move || add_enviroment(pool, 1, &enviroment))
-        .await
-        .map(|project| HttpResponse::Created().json(project))
-        .map_err(|_| HttpResponse::InternalServerError())?)
+    Ok(web::block(move || {
+        add_enviroment(
+            pool,
+            1,
+            enviroment.sk.as_ref(),
+            enviroment.key_value.as_ref(),
+        )
+    })
+    .await
+    .map(|project| HttpResponse::Created().json(project))
+    .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
 pub async fn run_add(
@@ -72,25 +81,42 @@ pub async fn run_add(
     item: web::Json<RunIdentifierJson>,
 ) -> Result<HttpResponse, Error> {
     let run_identifier = item.into_inner();
-    Ok(
-        web::block(move || add_run_identifier(pool, 1, &run_identifier))
-            .await
-            .map(|project| HttpResponse::Created().json(project))
-            .map_err(|_| HttpResponse::InternalServerError())?,
-    )
+    Ok(web::block(move || {
+        add_run_identifier(
+            pool,
+            1,
+            run_identifier.sk.as_ref(),
+            run_identifier.client_identifier.as_ref(),
+            run_identifier.created,
+        )
+    })
+    .await
+    .map(|project| HttpResponse::Created().json(project))
+    .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
 pub async fn test_case_error_add(
     pool: web::Data<Pool>,
     item: web::Json<TestCaseErrorJson>,
 ) -> Result<HttpResponse, Error> {
-    let run_identifier = item.into_inner();
-    Ok(
-        web::block(move || add_test_case_error(pool, 1, &run_identifier))
-            .await
-            .map(|project| HttpResponse::Created().json(project))
-            .map_err(|_| HttpResponse::InternalServerError())?,
-    )
+    let test_case_error = item.into_inner();
+    Ok(web::block(move || {
+        add_test_case_error(
+            pool,
+            1,
+            &test_case_error.name,
+            &test_case_error.classname,
+            test_case_error.time,
+            test_case_error.error_message.as_ref(),
+            test_case_error.error_type.as_ref(),
+            test_case_error.error_description.as_ref(),
+            test_case_error.system_out.as_ref(),
+            test_case_error.system_err.as_ref(),
+        )
+    })
+    .await
+    .map(|project| HttpResponse::Created().json(project))
+    .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
 pub async fn test_case_failure_add(

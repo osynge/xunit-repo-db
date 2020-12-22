@@ -9,7 +9,7 @@ pub struct TestCaseFailure {
     pub id: i32,
     pub name: String,
     pub classname: String,
-    pub time: Option<i32>,
+    pub time: Option<f32>,
     pub failure_message: Option<String>,
     pub failure_type: Option<String>,
     pub failure_description: Option<String>,
@@ -23,7 +23,7 @@ pub struct TestCaseFailure {
 pub struct TestCaseFailureNew<'a> {
     pub name: &'a str,
     pub classname: &'a str,
-    pub time: Option<i32>,
+    pub time: Option<f32>,
     pub failure_message: Option<&'a str>,
     pub failure_type: Option<&'a str>,
     pub failure_description: Option<&'a str>,
@@ -36,7 +36,7 @@ pub struct TestCaseFailureNew<'a> {
 pub struct TestCaseFailureJson {
     pub name: String,
     pub classname: String,
-    pub time: Option<i32>,
+    pub time: Option<f32>,
     pub failure_message: Option<String>,
     pub failure_type: Option<String>,
     pub failure_description: Option<String>,
