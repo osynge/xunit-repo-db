@@ -82,9 +82,12 @@ pub fn add_run_identifier(
         Some(p) => p,
         None => Utc::now().timestamp(),
     };
-
+    println!("run:created:{:#?}", created);
+    println!("run:run_sk:{:#?}", run_sk);
+    println!("run:run_client_identifier:{:#?}", run_client_identifier);
     match (run_sk, run_client_identifier) {
         (Some(sk), Some(client_identifier)) => {
+            println!("run:1");
             match run_identifier_get_by_sk_client_identifier(
                 pool.clone(),
                 fk_project,
@@ -97,8 +100,8 @@ pub fn add_run_identifier(
                 }
             }
         }
-
         (None, Some(client_identifier)) => {
+            println!("run:client_identifier:{:#?}", client_identifier);
             let sk = Uuid::new_v4().to_string();
 
             match run_identifier_get_by_client_identifier(
@@ -112,7 +115,13 @@ pub fn add_run_identifier(
                 }
             }
         }
-        (None, None) => Err(diesel::result::Error::NotFound),
-        (Some(sk), None) => run_identifier_get_by_sk(pool.clone(), fk_project, &sk),
+        (None, None) => {
+            println!("run:2");
+            Err(diesel::result::Error::NotFound)
+        }
+        (Some(sk), None) => {
+            println!("run:3");
+            run_identifier_get_by_sk(pool.clone(), fk_project, &sk)
+        }
     }
 }

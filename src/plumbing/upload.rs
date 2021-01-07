@@ -42,8 +42,10 @@ pub fn get_upload(
         let name = &fileItem.filename;
         for ts in fileItem.content.testsuite.iter() {
             for tc in ts.testcase.iter() {
-                match &tc.error {
-                    Some(tc_error) => {
+                match (&tc.skipped ,&tc.failure ,&tc.error) {
+                    (Some(skipmsg), None, None) => {println!("Skip");},
+                    (None, Some(failmsg), None) => {println!("fail");},
+                    (None, None, Some(tc_error)) => {
                         add_test_case_error(
                             pool.clone(),
                             run.id,
@@ -56,8 +58,9 @@ pub fn get_upload(
                             tc.system_out.as_ref(),
                             tc.system_err.as_ref(),
                         )?;
-                    }
-                    None => {}
+                    },
+                    (None,None,None) => {println!("Pass");},
+                    _ => {println!("Cannot mix");},
                 }
             }
         }
