@@ -4,6 +4,7 @@ use crate::plumbing::enviroment::add_enviroment;
 use crate::plumbing::project::add_project;
 use crate::plumbing::run_identifier::add_run_identifier;
 use crate::plumbing::test_case_error::add_test_case_error;
+use crate::plumbing::test_case_pass::add_test_case_pass;
 use crate::Pool;
 use actix_web::web;
 use diesel::dsl::insert_into;
@@ -42,14 +43,18 @@ pub fn get_upload(
         let name = &fileItem.filename;
         for ts in fileItem.content.testsuite.iter() {
             for tc in ts.testcase.iter() {
-                match (&tc.skipped ,&tc.failure ,&tc.error) {
-                    (Some(skipmsg), None, None) => {println!("Skip");},
-                    (None, Some(failmsg), None) => {println!("fail");},
+                match (&tc.skipped, &tc.failure, &tc.error) {
+                    (Some(skipmsg), None, None) => {
+                        println!("Skip");
+                    }
+                    (None, Some(failmsg), None) => {
+                        println!("fail");
+                    }
                     (None, None, Some(tc_error)) => {
                         add_test_case_error(
                             pool.clone(),
                             run.id,
-                            &tc.classname,
+                            &tc.name,
                             &tc.classname,
                             Some(tc.time),
                             Some(&tc_error.message.clone()),
@@ -58,9 +63,20 @@ pub fn get_upload(
                             tc.system_out.as_ref(),
                             tc.system_err.as_ref(),
                         )?;
-                    },
-                    (None,None,None) => {println!("Pass");},
-                    _ => {println!("Cannot mix");},
+                    }
+                    (None, None, None) => {
+                        println!("Pass");
+                        add_test_case_pass(
+                            pool.clone(),
+                            run.id,
+                            &tc.classname,
+                            &tc.name,
+                            &Some(tc.time),
+                        )?;
+                    }
+                    _ => {
+                        println!("Cannot mix");
+                    }
                 }
             }
         }

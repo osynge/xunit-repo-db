@@ -150,12 +150,18 @@ pub async fn test_case_pass_add(
     item: web::Json<TestCasePassJson>,
 ) -> Result<HttpResponse, Error> {
     let run_identifier = item.into_inner();
-    Ok(
-        web::block(move || add_test_case_pass(pool, 1, &run_identifier))
-            .await
-            .map(|project| HttpResponse::Created().json(project))
-            .map_err(|_| HttpResponse::InternalServerError())?,
-    )
+    Ok(web::block(move || {
+        add_test_case_pass(
+            pool,
+            1,
+            &run_identifier.name,
+            &run_identifier.classname,
+            &run_identifier.time,
+        )
+    })
+    .await
+    .map(|project| HttpResponse::Created().json(project))
+    .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
 pub async fn upload(
