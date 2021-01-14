@@ -7,27 +7,24 @@ use diesel::RunQueryDsl;
 
 pub fn add_test_case_pass(
     pool: web::Data<Pool>,
-    filter_fk_test_run: i32,
-    tc_name: &String,
-    tc_classname: &String,
+    filter_fk_test_file_run: i32,
+    new_fk_test_case: i32,
     tc_time: &Option<f32>,
 ) -> Result<TestCasePass, diesel::result::Error> {
     use crate::schema::test_case_pass::dsl::*;
     let db_connection = pool.get().unwrap();
     match test_case_pass
-        .filter(name.eq(&tc_name))
-        .filter(classname.eq(&tc_classname))
+        .filter(fk_test_case.eq(new_fk_test_case))
         .filter(time.eq(tc_time))
-        .filter(fk_test_run.eq(filter_fk_test_run))
+        .filter(fk_test_file_run.eq(filter_fk_test_file_run))
         .first::<TestCasePass>(&db_connection)
     {
         Ok(result) => Ok(result),
         Err(_) => {
             let new_keyvalue = TestCasePassNew {
-                name: &tc_name,
-                classname: &tc_classname,
+                fk_test_case: new_fk_test_case,
                 time: tc_time.clone(),
-                fk_test_run: filter_fk_test_run,
+                fk_test_file_run: filter_fk_test_file_run,
             };
 
             insert_into(test_case_pass)

@@ -62,16 +62,11 @@ CREATE TABLE run_identifier (
     UNIQUE (client_identifier, fk_project) ON CONFLICT ABORT
 );
 /*
- Allows grouping of many enviroments in a single run
- this maybe shared across enviroments but not projects
+ test_run Happens in an enviroments for a run identifier
  */
 CREATE TABLE test_run (
     id INTEGER PRIMARY KEY NOT NULL,
     sk CHARACTER(32) NOT NULL,
-    /* Client identifier
-     for example GIT_COMMIT + CI/CD BUILD_NUMBER
-     */
-    client_identifier VARCHAR NOT NULL,
     created BigInt NOT NULL,
     fk_run_identifier INTEGER NOT NULL,
     fk_enviroment INTEGER NOT NULL,
@@ -79,22 +74,47 @@ CREATE TABLE test_run (
     FOREIGN KEY (fk_run_identifier) REFERENCES run_identifier (id) ON DELETE CASCADE ON UPDATE NO ACTION
 );
 /*
+ test_file have one or more test files
+ */
+CREATE TABLE test_file (
+    id INTEGER PRIMARY KEY NOT NULL,
+    directory VARCHAR NOT NULL,
+    file_name VARCHAR NOT NULL,
+    UNIQUE (directory, file_name) ON CONFLICT ABORT
+);
+/*
+ test_run have one or more test files
+ */
+CREATE TABLE test_file_run (
+    id INTEGER PRIMARY KEY NOT NULL,
+    sk CHARACTER(32) NOT NULL,
+    fk_test_file INTEGER NOT NULL,
+    fk_test_run INTEGER NOT NULL,
+    FOREIGN KEY (fk_test_file) REFERENCES test_file (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    UNIQUE (fk_test_file, fk_test_run) ON CONFLICT ABORT
+);
+/*
+ Many tests have the same name and classname
+ */
+CREATE TABLE test_case (
+    id INTEGER PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    classname TEXT NOT NULL,
+    UNIQUE (name, classname) ON CONFLICT ABORT
+);
+/*
  Allows grouping of many enviroments in a single run
  this maybe shared across enviroments but not projects
  */
 CREATE TABLE test_case_pass (
     id INTEGER PRIMARY KEY NOT NULL,
-    /* Client identifier
-     for example GIT_COMMIT + CI/CD BUILD_NUMBER
-     */
-    name TEXT NOT NULL,
-    classname TEXT NOT NULL,
+    fk_test_case INTEGER NOT NULL,
     /* Number of seconds to run */
     time REAL,
-    fk_test_run INTEGER NOT NULL,
-    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
-    UNIQUE (name, fk_test_run) ON CONFLICT ABORT,
-    UNIQUE (classname, fk_test_run) ON CONFLICT ABORT
+    fk_test_file_run INTEGER NOT NULL,
+    FOREIGN KEY (fk_test_case) REFERENCES test_case (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    FOREIGN KEY (fk_test_file_run) REFERENCES test_file_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    UNIQUE (fk_test_case, fk_test_file_run) ON CONFLICT ABORT
 );
 /*
  Allows grouping of many enviroments in a single run
@@ -102,18 +122,14 @@ CREATE TABLE test_case_pass (
  */
 CREATE TABLE test_case_skipped (
     id INTEGER PRIMARY KEY NOT NULL,
-    /* Client identifier
-     for example GIT_COMMIT + CI/CD BUILD_NUMBER
-     */
-    name TEXT NOT NULL,
-    classname TEXT NOT NULL,
+    fk_test_case INTEGER NOT NULL,
     /* Number of seconds to run */
     time REAL,
     skipped_message TEXT,
-    fk_test_run INTEGER NOT NULL,
-    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
-    UNIQUE (name, fk_test_run) ON CONFLICT ABORT,
-    UNIQUE (classname, fk_test_run) ON CONFLICT ABORT
+    fk_test_file_run INTEGER NOT NULL,
+    FOREIGN KEY (fk_test_case) REFERENCES test_case (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    FOREIGN KEY (fk_test_file_run) REFERENCES test_file_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    UNIQUE (fk_test_case, fk_test_file_run) ON CONFLICT ABORT
 );
 /*
  Allows grouping of many enviroments in a single run
@@ -121,11 +137,7 @@ CREATE TABLE test_case_skipped (
  */
 CREATE TABLE test_case_error (
     id INTEGER PRIMARY KEY NOT NULL,
-    /* Client identifier
-     for example GIT_COMMIT + CI/CD BUILD_NUMBER
-     */
-    name TEXT NOT NULL,
-    classname TEXT NOT NULL,
+    fk_test_case INTEGER NOT NULL,
     /* Number of seconds to run */
     time REAL,
     error_message TEXT,
@@ -133,10 +145,10 @@ CREATE TABLE test_case_error (
     error_description TEXT,
     system_out TEXT,
     system_err TEXT,
-    fk_test_run INTEGER NOT NULL,
-    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
-    UNIQUE (name, fk_test_run) ON CONFLICT ABORT,
-    UNIQUE (classname, fk_test_run) ON CONFLICT ABORT
+    fk_test_file_run INTEGER NOT NULL,
+    FOREIGN KEY (fk_test_case) REFERENCES test_case (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    FOREIGN KEY (fk_test_file_run) REFERENCES test_file_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    UNIQUE (fk_test_case, fk_test_file_run) ON CONFLICT ABORT
 );
 /*
  Allows grouping of many enviroments in a single run
@@ -144,11 +156,7 @@ CREATE TABLE test_case_error (
  */
 CREATE TABLE test_case_failure (
     id INTEGER PRIMARY KEY NOT NULL,
-    /* Client identifier
-     for example GIT_COMMIT + CI/CD BUILD_NUMBER
-     */
-    name TEXT NOT NULL,
-    classname TEXT NOT NULL,
+    fk_test_case INTEGER NOT NULL,
     /* Number of seconds to run */
     time REAL,
     failure_message TEXT,
@@ -156,8 +164,8 @@ CREATE TABLE test_case_failure (
     failure_description TEXT,
     system_out TEXT,
     system_err TEXT,
-    fk_test_run INTEGER NOT NULL,
-    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
-    UNIQUE (name, fk_test_run) ON CONFLICT ABORT,
-    UNIQUE (classname, fk_test_run) ON CONFLICT ABORT
+    fk_test_file_run INTEGER NOT NULL,
+    FOREIGN KEY (fk_test_case) REFERENCES test_case (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    FOREIGN KEY (fk_test_file_run) REFERENCES test_file_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    UNIQUE (fk_test_case, fk_test_file_run) ON CONFLICT ABORT
 );

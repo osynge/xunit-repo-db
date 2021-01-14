@@ -104,8 +104,7 @@ pub async fn test_case_error_add(
         add_test_case_error(
             pool,
             1,
-            &test_case_error.name,
-            &test_case_error.classname,
+            1,
             test_case_error.time,
             test_case_error.error_message.as_ref(),
             test_case_error.error_type.as_ref(),
@@ -124,12 +123,22 @@ pub async fn test_case_failure_add(
     item: web::Json<TestCaseFailureJson>,
 ) -> Result<HttpResponse, Error> {
     let run_identifier = item.into_inner();
-    Ok(
-        web::block(move || add_test_case_failure(pool, 1, &run_identifier))
-            .await
-            .map(|project| HttpResponse::Created().json(project))
-            .map_err(|_| HttpResponse::InternalServerError())?,
-    )
+    Ok(web::block(move || {
+        add_test_case_failure(
+            pool,
+            1,
+            1,
+            &run_identifier.time,
+            &run_identifier.failure_message,
+            &run_identifier.failure_type,
+            &run_identifier.failure_description,
+            &run_identifier.system_out,
+            &run_identifier.system_err,
+        )
+    })
+    .await
+    .map(|project| HttpResponse::Created().json(project))
+    .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
 pub async fn test_case_skipped_add(
@@ -137,12 +146,18 @@ pub async fn test_case_skipped_add(
     item: web::Json<TestCaseSkippedJson>,
 ) -> Result<HttpResponse, Error> {
     let run_identifier = item.into_inner();
-    Ok(
-        web::block(move || add_test_case_skipped(pool, 1, &run_identifier))
-            .await
-            .map(|project| HttpResponse::Created().json(project))
-            .map_err(|_| HttpResponse::InternalServerError())?,
-    )
+    Ok(web::block(move || {
+        add_test_case_skipped(
+            pool,
+            1,
+            1,
+            &run_identifier.time,
+            &run_identifier.skipped_message,
+        )
+    })
+    .await
+    .map(|project| HttpResponse::Created().json(project))
+    .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
 pub async fn test_case_pass_add(
@@ -150,18 +165,12 @@ pub async fn test_case_pass_add(
     item: web::Json<TestCasePassJson>,
 ) -> Result<HttpResponse, Error> {
     let run_identifier = item.into_inner();
-    Ok(web::block(move || {
-        add_test_case_pass(
-            pool,
-            1,
-            &run_identifier.name,
-            &run_identifier.classname,
-            &run_identifier.time,
-        )
-    })
-    .await
-    .map(|project| HttpResponse::Created().json(project))
-    .map_err(|_| HttpResponse::InternalServerError())?)
+    Ok(
+        web::block(move || add_test_case_pass(pool, 1, 1, &run_identifier.time))
+            .await
+            .map(|project| HttpResponse::Created().json(project))
+            .map_err(|_| HttpResponse::InternalServerError())?,
+    )
 }
 
 pub async fn upload(
