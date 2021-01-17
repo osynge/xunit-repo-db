@@ -1,3 +1,4 @@
+use crate::db;
 use crate::model::keyvalue::{KeyValue, KeyValueJson, KeyValueNew};
 use crate::Pool;
 use actix_web::web;
@@ -6,17 +7,16 @@ use diesel::prelude::*;
 use diesel::RunQueryDsl;
 
 pub fn add_keyvalue(
-    pool: web::Data<Pool>,
+    conn: &db::DbConnection,
 
     new_key: &String,
     new_value: &String,
 ) -> Result<KeyValue, diesel::result::Error> {
     use crate::schema::keyvalue::dsl::*;
-    let db_connection = pool.get().unwrap();
     match keyvalue
         .filter(key.eq(key))
         .filter(value.eq(value))
-        .first::<KeyValue>(&db_connection)
+        .first::<KeyValue>(conn)
     {
         Ok(result) => Ok(result),
         Err(_) => {
@@ -27,10 +27,10 @@ pub fn add_keyvalue(
 
             insert_into(keyvalue)
                 .values(&new_keyvalue)
-                .execute(&db_connection)
+                .execute(conn)
                 .expect("Error saving new keyvalue");
 
-            let result = keyvalue.order(id.desc()).first(&db_connection).unwrap();
+            let result = keyvalue.order(id.desc()).first(conn).unwrap();
             Ok(result)
         }
     }

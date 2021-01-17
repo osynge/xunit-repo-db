@@ -20,6 +20,7 @@ pub fn get_upload(
     pool: web::Data<Pool>,
     item: &xunit_repo_interface::Upload,
 ) -> Result<crate::model::project::Project, diesel::result::Error> {
+    let conn = pool.clone().get().unwrap();
     println!("got:{:#?}", item);
     let project = add_project(
         pool.clone(),
@@ -29,7 +30,7 @@ pub fn get_upload(
     )?;
     println!("project:{:#?}", project);
     let env = add_enviroment(
-        pool.clone(),
+        &conn,
         project.id,
         item.enviroment.sk.as_ref(),
         Some(&item.enviroment.key_value),
