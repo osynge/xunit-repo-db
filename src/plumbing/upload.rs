@@ -52,7 +52,7 @@ pub fn get_upload(
 
         for ts in fileItem.content.testsuite.iter() {
             for tc in ts.testcase.iter() {
-                let test_case = add_test_case(pool.clone(), &tc.name, &tc.classname)?;
+                let test_case = add_test_case(&conn, &tc.name, &tc.classname)?;
                 match (&tc.skipped, &tc.failure, &tc.error) {
                     (Some(skipmsg), None, None) => {
                         println!("Skip");

@@ -1,21 +1,19 @@
 use crate::model::test_case::{TestCase, TestCaseNew};
-use crate::Pool;
-use actix_web::web;
+use crate::DbConnection;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
 
 pub fn add_test_case(
-    pool: web::Data<Pool>,
+    conn: &DbConnection,
     new_name: &String,
     new_classname: &String,
 ) -> Result<TestCase, diesel::result::Error> {
     use crate::schema::test_case::dsl::*;
-    let db_connection = pool.get().unwrap();
     match test_case
         .filter(name.eq(new_name))
         .filter(classname.eq(new_classname))
-        .first::<TestCase>(&db_connection)
+        .first::<TestCase>(conn)
     {
         Ok(p) => return Ok(p),
         Err(_) => {
@@ -25,10 +23,10 @@ pub fn add_test_case(
             };
             insert_into(test_case)
                 .values(&new_test_case_new)
-                .execute(&db_connection)
+                .execute(conn)
                 .expect("Error saving new test_case_new");
 
-            let result = test_case.order(id.desc()).first(&db_connection)?;
+            let result = test_case.order(id.desc()).first(conn)?;
             Ok(result)
         }
     }
