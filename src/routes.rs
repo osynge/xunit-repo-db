@@ -149,10 +149,11 @@ pub async fn test_case_skipped_add(
     pool: web::Data<Pool>,
     item: web::Json<TestCaseSkippedJson>,
 ) -> Result<HttpResponse, Error> {
+    let conn = pool.get().unwrap();
     let run_identifier = item.into_inner();
     Ok(web::block(move || {
         add_test_case_skipped(
-            pool,
+            &conn,
             1,
             1,
             &run_identifier.time,
