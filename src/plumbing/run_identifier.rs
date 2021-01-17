@@ -1,7 +1,5 @@
 use crate::model::run_identifier::{RunIdentifier, RunIdentifierJson, RunIdentifierNew};
 use crate::DbConnection;
-use crate::Pool;
-use actix_web::web;
 use chrono::Utc;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;

@@ -1,7 +1,6 @@
 use crate::db;
 use crate::model::keyvalue::KeyValueNew;
 use crate::DbConnection;
-use crate::Pool;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;

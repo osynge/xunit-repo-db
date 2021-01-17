@@ -4,8 +4,6 @@ use crate::model::keyvalue::KeyValueJson;
 use crate::plumbing::bind_enviroment_keyvalue::add_bind_enviroment_keyvalue;
 use crate::plumbing::keyvalue::add_keyvalue;
 use crate::DbConnection;
-use crate::Pool;
-use actix_web::web;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;

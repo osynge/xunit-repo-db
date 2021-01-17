@@ -1,7 +1,5 @@
 use crate::model::test_file_run::{TestFileRun, TestFileRunNew};
 use crate::DbConnection;
-use crate::Pool;
-use actix_web::web;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;

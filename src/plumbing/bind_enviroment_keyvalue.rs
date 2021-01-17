@@ -2,8 +2,6 @@ use crate::model::bind_enviroment_keyvalue::{
     BindEnviromentKeyvalue, BindEnviromentKeyvalueJson, BindEnviromentKeyvalueNew,
 };
 use crate::DbConnection;
-use crate::Pool;
-use actix_web::web;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
