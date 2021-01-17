@@ -84,9 +84,10 @@ pub async fn run_add(
     item: web::Json<RunIdentifierJson>,
 ) -> Result<HttpResponse, Error> {
     let run_identifier = item.into_inner();
+    let conn = pool.get().unwrap();
     Ok(web::block(move || {
         add_run_identifier(
-            pool,
+            &conn,
             1,
             run_identifier.sk.as_ref(),
             run_identifier.client_identifier.as_ref(),

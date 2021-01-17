@@ -37,7 +37,7 @@ pub fn get_upload(
     )?;
     println!("env:{:#?}", env);
     let run = add_run_identifier(
-        pool.clone(),
+        &conn,
         project.id,
         item.run.sk.as_ref(),
         item.run.client_identifier.as_ref(),

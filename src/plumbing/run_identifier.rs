@@ -1,4 +1,5 @@
 use crate::model::run_identifier::{RunIdentifier, RunIdentifierJson, RunIdentifierNew};
+use crate::DbConnection;
 use crate::Pool;
 use actix_web::web;
 use chrono::Utc;
@@ -8,55 +9,51 @@ use diesel::RunQueryDsl;
 use uuid::Uuid;
 
 fn run_identifier_get_by_sk_client_identifier(
-    pool: web::Data<Pool>,
+    conn: &DbConnection,
     filter_fk_project: i32,
     filter_sk: &String,
     filter_client_identifier: &String,
 ) -> Result<RunIdentifier, diesel::result::Error> {
     use crate::schema::run_identifier::dsl::*;
-    let db_connection = pool.get().unwrap();
     run_identifier
         .filter(sk.eq(filter_sk))
         .filter(fk_project.eq(filter_fk_project))
         .filter(client_identifier.eq(filter_client_identifier))
-        .first::<RunIdentifier>(&db_connection)
+        .first::<RunIdentifier>(conn)
 }
 
 fn run_identifier_get_by_client_identifier(
-    pool: web::Data<Pool>,
+    conn: &DbConnection,
     filter_fk_project: i32,
     filter_client_identifier: &String,
 ) -> Result<RunIdentifier, diesel::result::Error> {
     use crate::schema::run_identifier::dsl::*;
-    let db_connection = pool.get().unwrap();
     run_identifier
         .filter(client_identifier.eq(filter_client_identifier))
         .filter(fk_project.eq(filter_fk_project))
-        .first::<RunIdentifier>(&db_connection)
+        .first::<RunIdentifier>(conn)
 }
 
 fn run_identifier_get_by_sk(
-    pool: web::Data<Pool>,
+    conn: &DbConnection,
     filter_fk_project: i32,
     filter_sk: &String,
 ) -> Result<RunIdentifier, diesel::result::Error> {
     use crate::schema::run_identifier::dsl::*;
-    let db_connection = pool.get().unwrap();
     run_identifier
         .filter(sk.eq(filter_sk))
         .filter(fk_project.eq(filter_fk_project))
-        .first::<RunIdentifier>(&db_connection)
+        .first::<RunIdentifier>(conn)
 }
 
 fn insert_run_identifier(
-    pool: web::Data<Pool>,
+    conn: &DbConnection,
     insert_fk_project: i32,
     insert_created: i64,
     insert_sk: &String,
     insert_client_identifier: &String,
 ) -> Result<RunIdentifier, diesel::result::Error> {
     use crate::schema::run_identifier::dsl::*;
-    let db_connection = pool.get().unwrap();
     let new_runident = RunIdentifierNew {
         sk: &insert_sk,
         client_identifier: insert_client_identifier,
@@ -65,14 +62,14 @@ fn insert_run_identifier(
     };
     insert_into(run_identifier)
         .values(&new_runident)
-        .execute(&db_connection)
+        .execute(conn)
         .expect("Error saving new run_identifier");
-    let result = run_identifier.order(id.desc()).first(&db_connection)?;
+    let result = run_identifier.order(id.desc()).first(conn)?;
     Ok(result)
 }
 
 pub fn add_run_identifier(
-    pool: web::Data<Pool>,
+    conn: &DbConnection,
     fk_project: i32,
     run_sk: Option<&String>,
     run_client_identifier: Option<&String>,
@@ -89,30 +86,22 @@ pub fn add_run_identifier(
         (Some(sk), Some(client_identifier)) => {
             println!("run:1");
             match run_identifier_get_by_sk_client_identifier(
-                pool.clone(),
+                conn,
                 fk_project,
                 &sk,
                 &client_identifier,
             ) {
                 Ok(p) => Ok(p),
-                Err(_) => {
-                    insert_run_identifier(pool.clone(), fk_project, created, sk, client_identifier)
-                }
+                Err(_) => insert_run_identifier(conn, fk_project, created, sk, client_identifier),
             }
         }
         (None, Some(client_identifier)) => {
             println!("run:client_identifier:{:#?}", client_identifier);
             let sk = Uuid::new_v4().to_string();
 
-            match run_identifier_get_by_client_identifier(
-                pool.clone(),
-                fk_project,
-                &client_identifier,
-            ) {
+            match run_identifier_get_by_client_identifier(conn, fk_project, &client_identifier) {
                 Ok(p) => Ok(p),
-                Err(_) => {
-                    insert_run_identifier(pool.clone(), fk_project, created, &sk, client_identifier)
-                }
+                Err(_) => insert_run_identifier(conn, fk_project, created, &sk, client_identifier),
             }
         }
         (None, None) => {
@@ -121,7 +110,7 @@ pub fn add_run_identifier(
         }
         (Some(sk), None) => {
             println!("run:3");
-            run_identifier_get_by_sk(pool.clone(), fk_project, &sk)
+            run_identifier_get_by_sk(conn, fk_project, &sk)
         }
     }
 }
