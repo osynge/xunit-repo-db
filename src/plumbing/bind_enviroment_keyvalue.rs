@@ -1,7 +1,7 @@
-use crate::db;
 use crate::model::bind_enviroment_keyvalue::{
     BindEnviromentKeyvalue, BindEnviromentKeyvalueJson, BindEnviromentKeyvalueNew,
 };
+use crate::DbConnection;
 use crate::Pool;
 use actix_web::web;
 use diesel::dsl::insert_into;
@@ -9,7 +9,7 @@ use diesel::prelude::*;
 use diesel::RunQueryDsl;
 
 pub fn add_bind_enviroment_keyvalue(
-    conn: &db::DbConnection,
+    conn: &DbConnection,
     item: &BindEnviromentKeyvalueJson,
 ) -> Result<BindEnviromentKeyvalue, diesel::result::Error> {
     use crate::schema::bind_enviroment_keyvalue::dsl::*;

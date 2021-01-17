@@ -1,5 +1,6 @@
 use crate::db;
 use crate::model::keyvalue::KeyValueNew;
+use crate::DbConnection;
 use crate::Pool;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;
@@ -9,7 +10,7 @@ fn create_user_with_phone_and_email() {
     use crate::schema::keyvalue::dsl::*;
     /*"PooledConnection<ConnectionManager<SqliteConnection>>"*/
     let conn = db::establish_connection().get().unwrap();
-    let fred = &conn as &db::DbConnection;
+    let fred = &conn as &DbConnection;
     let new_key = "test@email.com";
     let new_value = "123456789";
 

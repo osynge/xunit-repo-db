@@ -1,5 +1,5 @@
-use crate::db;
 use crate::model::keyvalue::{KeyValue, KeyValueJson, KeyValueNew};
+use crate::DbConnection;
 use crate::Pool;
 use actix_web::web;
 use diesel::dsl::insert_into;
@@ -7,8 +7,7 @@ use diesel::prelude::*;
 use diesel::RunQueryDsl;
 
 pub fn add_keyvalue(
-    conn: &db::DbConnection,
-
+    conn: &DbConnection,
     new_key: &String,
     new_value: &String,
 ) -> Result<KeyValue, diesel::result::Error> {

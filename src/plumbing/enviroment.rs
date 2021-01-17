@@ -1,9 +1,9 @@
-use crate::db;
 use crate::model::bind_enviroment_keyvalue::BindEnviromentKeyvalueJson;
 use crate::model::enviroment::{Enviroment, EnviromentJson, EnviromentNew};
 use crate::model::keyvalue::KeyValueJson;
 use crate::plumbing::bind_enviroment_keyvalue::add_bind_enviroment_keyvalue;
 use crate::plumbing::keyvalue::add_keyvalue;
+use crate::DbConnection;
 use crate::Pool;
 use actix_web::web;
 use diesel::dsl::insert_into;
@@ -13,7 +13,7 @@ use std::collections::HashMap;
 use uuid::Uuid;
 
 fn enviroment_get_by_sk_hash_keyvalue(
-    conn: &db::DbConnection,
+    conn: &DbConnection,
     filter_fk_project: i32,
     filter_sk: &String,
     filter_hash_keyvalue: &String,
@@ -27,7 +27,7 @@ fn enviroment_get_by_sk_hash_keyvalue(
 }
 
 fn enviroment_get_by_hash_keyvalue(
-    conn: &db::DbConnection,
+    conn: &DbConnection,
     filter_fk_project: i32,
     filter_hash_keyvalue: &String,
 ) -> Result<Enviroment, diesel::result::Error> {
@@ -39,7 +39,7 @@ fn enviroment_get_by_hash_keyvalue(
 }
 
 fn enviroment_get_by_sk(
-    conn: &db::DbConnection,
+    conn: &DbConnection,
     filter_fk_project: i32,
     filter_sk: &String,
 ) -> Result<Enviroment, diesel::result::Error> {
@@ -51,7 +51,7 @@ fn enviroment_get_by_sk(
 }
 
 fn enviroment_insert_sk_hash_keyvalue(
-    conn: &db::DbConnection,
+    conn: &DbConnection,
     insert_fk_project: i32,
     insert_sk: &String,
     insert_hash_keyvalue: &String,
@@ -74,7 +74,7 @@ fn enviroment_insert_sk_hash_keyvalue(
 }
 
 fn enviroment_insert_hash_keyvalue(
-    conn: &db::DbConnection,
+    conn: &DbConnection,
     insert_fk_project: i32,
     insert_hash_keyvalue: &String,
 ) -> Result<Enviroment, diesel::result::Error> {
@@ -107,7 +107,7 @@ fn keyvalue_hash_gen(keyvalue: &HashMap<String, String>) -> String {
 }
 
 fn insert_enviroment(
-    conn: &db::DbConnection,
+    conn: &DbConnection,
     fk_project: i32,
     sk: &String,
     keyvalue: &HashMap<String, String>,
@@ -143,7 +143,7 @@ fn insert_enviroment(
 }
 
 pub fn add_enviroment(
-    conn: &db::DbConnection,
+    conn: &DbConnection,
     fk_project: i32,
     enviroment_sk: Option<&String>,
     enviroment_key_value: Option<&HashMap<String, String>>,
