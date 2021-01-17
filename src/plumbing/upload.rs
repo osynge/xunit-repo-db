@@ -48,7 +48,7 @@ pub fn get_upload(
         let dir = &fileItem.directory;
         let name = &fileItem.filename;
         let test_file = add_test_file(&conn, dir, name)?;
-        let test_file_run = add_test_file_run(pool.clone(), test_file.id, run.id)?;
+        let test_file_run = add_test_file_run(&conn, test_file.id, run.id)?;
 
         for ts in fileItem.content.testsuite.iter() {
             for tc in ts.testcase.iter() {
