@@ -126,10 +126,11 @@ pub async fn test_case_failure_add(
     pool: web::Data<Pool>,
     item: web::Json<TestCaseFailureJson>,
 ) -> Result<HttpResponse, Error> {
+    let conn = pool.get().unwrap();
     let run_identifier = item.into_inner();
     Ok(web::block(move || {
         add_test_case_failure(
-            pool,
+            &conn,
             1,
             1,
             &run_identifier.time,

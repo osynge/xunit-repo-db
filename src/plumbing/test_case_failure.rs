@@ -1,12 +1,11 @@
 use crate::model::test_case_failure::{TestCaseFailure, TestCaseFailureNew};
-use crate::Pool;
-use actix_web::web;
+use crate::DbConnection;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
 
 pub fn add_test_case_failure(
-    pool: web::Data<Pool>,
+    conn: &DbConnection,
     filter_fk_test_file_run: i32,
     new_fk_test_case: i32,
     new_time: &Option<f32>,
@@ -17,7 +16,6 @@ pub fn add_test_case_failure(
     new_system_err: &Option<String>,
 ) -> Result<TestCaseFailure, diesel::result::Error> {
     use crate::schema::test_case_failure::dsl::*;
-    let db_connection = pool.get().unwrap();
     match test_case_failure
         .filter(fk_test_case.eq(new_fk_test_case))
         .filter(time.eq(new_time))
@@ -27,7 +25,7 @@ pub fn add_test_case_failure(
         .filter(system_out.eq(new_system_out))
         .filter(system_err.eq(new_system_err))
         .filter(fk_test_file_run.eq(filter_fk_test_file_run))
-        .first::<TestCaseFailure>(&db_connection)
+        .first::<TestCaseFailure>(conn)
     {
         Ok(result) => Ok(result),
         Err(_) => {
@@ -44,13 +42,10 @@ pub fn add_test_case_failure(
 
             insert_into(test_case_failure)
                 .values(&new_keyvalue)
-                .execute(&db_connection)
+                .execute(conn)
                 .expect("Error saving new test case failure");
 
-            let result = test_case_failure
-                .order(id.desc())
-                .first(&db_connection)
-                .unwrap();
+            let result = test_case_failure.order(id.desc()).first(conn).unwrap();
             Ok(result)
         }
     }
