@@ -75,7 +75,7 @@ pub fn get_upload(
                     }
                     (None, None, None) => {
                         println!("Pass");
-                        add_test_case_pass(pool.clone(), run.id, test_case.id, &Some(tc.time))?;
+                        add_test_case_pass(&conn, run.id, test_case.id, &Some(tc.time))?;
                     }
                     _ => {
                         println!("Cannot mix");

@@ -170,8 +170,9 @@ pub async fn test_case_pass_add(
     item: web::Json<TestCasePassJson>,
 ) -> Result<HttpResponse, Error> {
     let run_identifier = item.into_inner();
+    let conn = pool.get().unwrap();
     Ok(
-        web::block(move || add_test_case_pass(pool, 1, 1, &run_identifier.time))
+        web::block(move || add_test_case_pass(&conn, 1, 1, &run_identifier.time))
             .await
             .map(|project| HttpResponse::Created().json(project))
             .map_err(|_| HttpResponse::InternalServerError())?,
