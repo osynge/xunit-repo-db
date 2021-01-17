@@ -1,3 +1,4 @@
+use crate::db;
 use crate::model::enviroment::EnviromentJson;
 use crate::model::keyvalue::KeyValueJson;
 use crate::model::project::ProjectJson;
@@ -16,7 +17,6 @@ use crate::plumbing::test_case_pass::add_test_case_pass;
 use crate::plumbing::test_case_skipped::add_test_case_skipped;
 use crate::plumbing::upload::get_upload;
 use crate::Pool;
-
 use actix_web::http::StatusCode;
 use actix_web::{web, Error, HttpResponse};
 use anyhow::Result;
@@ -49,9 +49,10 @@ pub async fn keyvalue_add(
     pool: web::Data<Pool>,
     item: web::Json<KeyValueJson>,
 ) -> Result<HttpResponse, Error> {
+    let conn = pool.get().unwrap();
     let keyvalue = item.into_inner();
     Ok(
-        web::block(move || add_keyvalue(pool, &keyvalue.key, &keyvalue.value))
+        web::block(move || add_keyvalue(&conn, &keyvalue.key, &keyvalue.value))
             .await
             .map(|project| HttpResponse::Created().json(project))
             .map_err(|_| HttpResponse::InternalServerError())?,
@@ -63,9 +64,10 @@ pub async fn enviroment_add(
     item: web::Json<EnviromentJson>,
 ) -> Result<HttpResponse, Error> {
     let enviroment = item.into_inner();
+    let conn = pool.get().unwrap();
     Ok(web::block(move || {
         add_enviroment(
-            pool,
+            &conn,
             1,
             enviroment.sk.as_ref(),
             enviroment.key_value.as_ref(),
