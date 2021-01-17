@@ -23,7 +23,7 @@ pub fn get_upload(
     let conn = pool.clone().get().unwrap();
     println!("got:{:#?}", item);
     let project = add_project(
-        pool.clone(),
+        &conn,
         item.project.sk.as_ref(),
         item.project.identiifier.as_ref(),
         item.project.human_name.as_ref(),

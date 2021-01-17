@@ -31,10 +31,11 @@ pub async fn project_add(
     pool: web::Data<Pool>,
     item: web::Json<ProjectJson>,
 ) -> Result<HttpResponse, Error> {
+    let conn = pool.get().unwrap();
     let project = item.into_inner();
     Ok(web::block(move || {
         add_project(
-            pool,
+            &conn,
             project.sk.as_ref(),
             project.identiifier.as_ref(),
             project.human_name.as_ref(),
