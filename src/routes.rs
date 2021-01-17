@@ -103,10 +103,11 @@ pub async fn test_case_error_add(
     pool: web::Data<Pool>,
     item: web::Json<TestCaseErrorJson>,
 ) -> Result<HttpResponse, Error> {
+    let conn = pool.get().unwrap();
     let test_case_error = item.into_inner();
     Ok(web::block(move || {
         add_test_case_error(
-            pool,
+            &conn,
             1,
             1,
             test_case_error.time,
@@ -184,8 +185,9 @@ pub async fn upload(
     pool: web::Data<Pool>,
     item: web::Json<xunit_repo_interface::Upload>,
 ) -> Result<HttpResponse, Error> {
+    let conn = pool.get().unwrap();
     let run_identifier = item.into_inner();
-    Ok(web::block(move || get_upload(pool, &run_identifier))
+    Ok(web::block(move || get_upload(&conn, &run_identifier))
         .await
         .map(|project| HttpResponse::Created().json(project))
         .map_err(|_| HttpResponse::InternalServerError())?)
