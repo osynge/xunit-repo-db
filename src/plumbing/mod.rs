@@ -3,6 +3,8 @@ pub mod enviroment;
 #[cfg(test)]
 mod enviroment_test;
 pub mod keyvalue;
+#[cfg(test)]
+mod keyvalue_test;
 pub mod project;
 pub mod run_identifier;
 pub mod test_case;

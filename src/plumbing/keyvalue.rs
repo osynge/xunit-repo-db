@@ -11,15 +11,15 @@ pub fn add_keyvalue(
 ) -> Result<KeyValue, diesel::result::Error> {
     use crate::schema::keyvalue::dsl::*;
     match keyvalue
-        .filter(key.eq(key))
-        .filter(value.eq(value))
+        .filter(key.eq(new_key))
+        .filter(value.eq(new_value))
         .first::<KeyValue>(conn)
     {
         Ok(result) => Ok(result),
         Err(_) => {
             let new_keyvalue = KeyValueNew {
-                key: &new_key.clone(),
-                value: &new_value.clone(),
+                key: &new_key,
+                value: &new_value,
             };
 
             insert_into(keyvalue)
