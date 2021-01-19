@@ -1,4 +1,3 @@
-use crate::model::keyvalue::KeyValueJson;
 use crate::model::project;
 use crate::schema::*;
 use serde::{Deserialize, Serialize};

@@ -1,4 +1,4 @@
-use crate::model::run_identifier::{RunIdentifier, RunIdentifierJson, RunIdentifierNew};
+use crate::model::run_identifier::{RunIdentifier, RunIdentifierNew};
 use crate::DbConnection;
 use chrono::Utc;
 use diesel::dsl::insert_into;

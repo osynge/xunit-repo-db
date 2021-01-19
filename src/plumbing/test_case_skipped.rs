@@ -1,4 +1,4 @@
-use crate::model::test_case_skipped::{TestCaseSkipped, TestCaseSkippedJson, TestCaseSkippedNew};
+use crate::model::test_case_skipped::{TestCaseSkipped, TestCaseSkippedNew};
 use crate::DbConnection;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;

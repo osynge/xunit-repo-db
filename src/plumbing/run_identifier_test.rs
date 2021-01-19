@@ -1,5 +1,3 @@
-use actix_rt::blocking::run;
-
 use crate::db;
 use crate::plumbing::project;
 use crate::plumbing::run_identifier;

@@ -1,7 +1,5 @@
 use crate::model::test_case_error::{TestCaseError, TestCaseErrorJson, TestCaseErrorNew};
 use crate::DbConnection;
-use crate::Pool;
-use actix_web::web;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;

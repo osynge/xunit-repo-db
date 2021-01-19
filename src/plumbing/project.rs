@@ -1,4 +1,4 @@
-use crate::model::project::{Project, ProjectJson, ProjectNew};
+use crate::model::project::{Project, ProjectNew};
 use crate::DbConnection;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;

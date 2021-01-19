@@ -1,4 +1,4 @@
-use crate::model::keyvalue::{KeyValue, KeyValueJson, KeyValueNew};
+use crate::model::keyvalue::{KeyValue, KeyValueNew};
 use crate::DbConnection;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;

@@ -1,5 +1,3 @@
-use crate::model::project::ProjectJson;
-use crate::model::test_case_pass::{TestCasePass, TestCasePassJson, TestCasePassNew};
 use crate::plumbing::enviroment::add_enviroment;
 use crate::plumbing::project::add_project;
 use crate::plumbing::run_identifier::add_run_identifier;
@@ -10,13 +8,6 @@ use crate::plumbing::test_file::add_test_file;
 use crate::plumbing::test_file_run::add_test_file_run;
 use crate::plumbing::test_run::add_test_run;
 use crate::DbConnection;
-use crate::Pool;
-use actix_web::web;
-use diesel::dsl::insert_into;
-use diesel::prelude::*;
-use diesel::RunQueryDsl;
-
-use super::{test_case, test_file};
 
 pub fn get_upload(
     conn: &DbConnection,
@@ -48,13 +39,13 @@ pub fn get_upload(
     let tr = add_test_run(&conn, run.id, env.id)?;
     println!("tr:{:#?}", tr);
 
-    for fileItem in item.files.iter() {
-        let dir = &fileItem.directory;
-        let name = &fileItem.filename;
+    for file_item in item.files.iter() {
+        let dir = &file_item.directory;
+        let name = &file_item.filename;
         let test_file = add_test_file(conn, dir, name)?;
         let test_file_run = add_test_file_run(conn, test_file.id, tr.id)?;
 
-        for ts in fileItem.content.testsuite.iter() {
+        for ts in file_item.content.testsuite.iter() {
             for tc in ts.testcase.iter() {
                 let test_case = add_test_case(conn, &tc.name, &tc.classname)?;
                 match (&tc.skipped, &tc.failure, &tc.error) {

@@ -2,7 +2,6 @@ use crate::db;
 use crate::model::keyvalue::KeyValueNew;
 use crate::DbConnection;
 use diesel::dsl::insert_into;
-use diesel::prelude::*;
 use diesel::RunQueryDsl;
 #[test]
 fn create_user_with_phone_and_email() {

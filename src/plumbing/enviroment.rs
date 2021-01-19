@@ -1,6 +1,5 @@
 use crate::model::bind_enviroment_keyvalue::BindEnviromentKeyvalueJson;
-use crate::model::enviroment::{Enviroment, EnviromentJson, EnviromentNew};
-use crate::model::keyvalue::KeyValueJson;
+use crate::model::enviroment::{Enviroment, EnviromentNew};
 use crate::plumbing::bind_enviroment_keyvalue::add_bind_enviroment_keyvalue;
 use crate::plumbing::keyvalue::add_keyvalue;
 use crate::DbConnection;

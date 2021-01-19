@@ -1,4 +1,4 @@
-use crate::model::test_case_pass::{TestCasePass, TestCasePassJson, TestCasePassNew};
+use crate::model::test_case_pass::{TestCasePass, TestCasePassNew};
 use crate::DbConnection;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;
