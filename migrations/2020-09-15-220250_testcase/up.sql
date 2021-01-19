@@ -55,7 +55,7 @@ CREATE TABLE run_identifier (
      for example GIT_COMMIT + CI/CD BUILD_NUMBER
      */
     client_identifier CHARACTER(32) NOT NULL,
-    created INT NOT NULL,
+    created BigInt NOT NULL,
     fk_project INTEGER NOT NULL,
     FOREIGN KEY (fk_project) REFERENCES project (id) ON DELETE CASCADE ON UPDATE NO ACTION,
     UNIQUE (sk, fk_project) ON CONFLICT ABORT,
@@ -66,7 +66,6 @@ CREATE TABLE run_identifier (
  */
 CREATE TABLE test_run (
     id INTEGER PRIMARY KEY NOT NULL,
-    sk CHARACTER(32) NOT NULL,
     created BigInt NOT NULL,
     fk_run_identifier INTEGER NOT NULL,
     fk_enviroment INTEGER NOT NULL,

@@ -118,7 +118,6 @@ table! {
 table! {
     test_run (id) {
         id -> Integer,
-        sk -> Text,
         created -> BigInt,
         fk_run_identifier -> Integer,
         fk_enviroment -> Integer,

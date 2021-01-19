@@ -8,6 +8,7 @@ use crate::plumbing::test_case_error::add_test_case_error;
 use crate::plumbing::test_case_pass::add_test_case_pass;
 use crate::plumbing::test_file::add_test_file;
 use crate::plumbing::test_file_run::add_test_file_run;
+use crate::plumbing::test_run::add_test_run;
 use crate::DbConnection;
 use crate::Pool;
 use actix_web::web;
@@ -44,11 +45,14 @@ pub fn get_upload(
         None,
     )?;
     println!("run:{:#?}", run);
+    let tr = add_test_run(&conn, run.id, env.id)?;
+    println!("tr:{:#?}", tr);
+
     for fileItem in item.files.iter() {
         let dir = &fileItem.directory;
         let name = &fileItem.filename;
         let test_file = add_test_file(conn, dir, name)?;
-        let test_file_run = add_test_file_run(conn, test_file.id, run.id)?;
+        let test_file_run = add_test_file_run(conn, test_file.id, tr.id)?;
 
         for ts in fileItem.content.testsuite.iter() {
             for tc in ts.testcase.iter() {
