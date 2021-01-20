@@ -4,9 +4,9 @@ PRAGMA foreign_keys = ON;
  */
 CREATE TABLE project (
     id INTEGER PRIMARY KEY NOT NULL,
-    sk CHARACTER(32) NOT NULL,
+    sk CHARACTER(32) UNIQUE NOT NULL,
     -- identiifier of a project
-    identiifier VARCHAR NOT NULL,
+    identiifier VARCHAR UNIQUE NOT NULL,
     -- HUman name for project
     human_name VARCHAR NOT NULL
 );
@@ -31,7 +31,7 @@ CREATE TABLE keyvalue (
     id INTEGER PRIMARY KEY NOT NULL,
     key TEXT NOT NULL,
     value TEXT NOT NULL,
-    UNIQUE (key, value) ON CONFLICT IGNORE
+    UNIQUE (key, value) ON CONFLICT ABORT
 );
 /*
  Enviroments are defined by the keyvalue that make them up.
@@ -50,7 +50,7 @@ CREATE TABLE bind_enviroment_keyvalue (
  */
 CREATE TABLE run_identifier (
     id INTEGER PRIMARY KEY NOT NULL,
-    sk CHARACTER(32) NOT NULL,
+    sk CHARACTER(32) UNIQUE NOT NULL,
     /* Client identifier
      for example GIT_COMMIT + CI/CD BUILD_NUMBER
      */
@@ -66,11 +66,13 @@ CREATE TABLE run_identifier (
  */
 CREATE TABLE test_run (
     id INTEGER PRIMARY KEY NOT NULL,
+    sk CHARACTER(32) UNIQUE NOT NULL,
     created BigInt NOT NULL,
     fk_run_identifier INTEGER NOT NULL,
     fk_enviroment INTEGER NOT NULL,
     FOREIGN KEY (fk_enviroment) REFERENCES enviroment (id) ON DELETE CASCADE ON UPDATE NO ACTION,
-    FOREIGN KEY (fk_run_identifier) REFERENCES run_identifier (id) ON DELETE CASCADE ON UPDATE NO ACTION
+    FOREIGN KEY (fk_run_identifier) REFERENCES run_identifier (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    UNIQUE (fk_run_identifier, fk_enviroment) ON CONFLICT ABORT
 );
 /*
  test_file have one or more test files
@@ -86,7 +88,7 @@ CREATE TABLE test_file (
  */
 CREATE TABLE test_file_run (
     id INTEGER PRIMARY KEY NOT NULL,
-    sk CHARACTER(32) NOT NULL,
+    sk CHARACTER(32) UNIQUE NOT NULL,
     fk_test_file INTEGER NOT NULL,
     fk_test_run INTEGER NOT NULL,
     FOREIGN KEY (fk_test_file) REFERENCES test_file (id) ON DELETE CASCADE ON UPDATE NO ACTION,

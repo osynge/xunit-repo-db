@@ -4,6 +4,7 @@ use chrono::Utc;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
+use uuid::Uuid;
 
 pub fn add_test_run(
     conn: &DbConnection,
@@ -18,8 +19,11 @@ pub fn add_test_run(
     {
         Ok(p) => return Ok(p),
         Err(_) => {
+            let new_sk = Uuid::new_v4().to_string();
             let new_created = Utc::now().timestamp();
+
             let new_test_run_new = TestRunNew {
+                sk: &new_sk,
                 fk_run_identifier: new_fk_run_identifier,
                 fk_enviroment: new_fk_enviroment,
                 created: new_created,

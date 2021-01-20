@@ -21,6 +21,7 @@ CREATE TABLE test_run (
 #[belongs_to(enviroment::Enviroment, foreign_key = "fk_enviroment")]
 pub struct TestRun {
     pub id: i32,
+    pub sk: String,
     pub created: i64,
     pub fk_run_identifier: i32,
     pub fk_enviroment: i32,
@@ -28,7 +29,8 @@ pub struct TestRun {
 
 #[derive(Debug, Insertable)]
 #[table_name = "test_run"]
-pub struct TestRunNew {
+pub struct TestRunNew<'a> {
+    pub sk: &'a str,
     pub created: i64,
     pub fk_run_identifier: i32,
     pub fk_enviroment: i32,
@@ -36,6 +38,7 @@ pub struct TestRunNew {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TestRunJson {
+    pub sk: String,
     pub created: i64,
     pub fk_run_identifier: i32,
     pub fk_enviroment: i32,
