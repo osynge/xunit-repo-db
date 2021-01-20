@@ -23,7 +23,7 @@ use anyhow::Result;
 pub async fn home() -> Result<HttpResponse, Error> {
     Ok(HttpResponse::build(StatusCode::OK)
         .content_type("text/html; charset=utf-8")
-        .body(include_str!("../templates/index.html")))
+        .body(include_str!("../../../templates/index.html")))
 }
 
 pub async fn project_add(
