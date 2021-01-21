@@ -31,7 +31,7 @@ pub fn add_test_case_failure(
         Err(_) => {
             let new_keyvalue = TestCaseFailureNew {
                 fk_test_case: new_fk_test_case,
-                time: new_time.clone(),
+                time: new_time.as_ref(),
                 failure_message: new_failure_message.as_deref(),
                 failure_type: new_failure_type.as_deref(),
                 failure_description: new_failure_description.as_deref(),

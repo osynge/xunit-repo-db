@@ -74,12 +74,12 @@ pub fn get_upload(
                             conn,
                             test_file_run.id,
                             test_case.id,
-                            Some(tc.time),
-                            Some(&tc_error.message.clone()),
-                            Some(&tc_error.error_type.clone()),
-                            Some(&tc_error.description.clone()),
-                            tc.system_out.as_ref(),
-                            tc.system_err.as_ref(),
+                            &Some(tc.time),
+                            &Some(tc_error.message.clone()),
+                            &Some(tc_error.error_type.clone()),
+                            &Some(tc_error.description.clone()),
+                            &tc.system_out,
+                            &tc.system_err,
                         )?;
                     }
                     (None, None, None) => {

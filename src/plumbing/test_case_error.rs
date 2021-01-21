@@ -8,12 +8,12 @@ pub fn add_test_case_error(
     conn: &DbConnection,
     filter_fk_test_file_run: i32,
     new_fk_test_case: i32,
-    tc_time: Option<f32>,
-    tc_error_message: Option<&String>,
-    tc_error_type: Option<&String>,
-    tc_error_description: Option<&String>,
-    tc_system_out: Option<&String>,
-    tc_system_err: Option<&String>,
+    tc_time: &Option<f32>,
+    tc_error_message: &Option<String>,
+    tc_error_type: &Option<String>,
+    tc_error_description: &Option<String>,
+    tc_system_out: &Option<String>,
+    tc_system_err: &Option<String>,
 ) -> Result<TestCaseError, diesel::result::Error> {
     use crate::schema::test_case_error::dsl::*;
     match test_case_error
@@ -31,12 +31,12 @@ pub fn add_test_case_error(
         Err(_) => {
             let new_keyvalue = TestCaseErrorNew {
                 fk_test_case: new_fk_test_case,
-                time: tc_time,
-                error_message: tc_error_message.map(|s| s.as_str()),
-                error_type: tc_error_type.map(|s| s.as_str()),
-                error_description: tc_error_description.map(|s| s.as_str()),
-                system_out: tc_system_out.map(|s| s.as_str()),
-                system_err: tc_system_err.map(|s| s.as_str()),
+                time: tc_time.as_ref(),
+                error_message: tc_error_message.as_deref(),
+                error_type: tc_error_type.as_deref(),
+                error_description: tc_error_description.as_deref(),
+                system_out: tc_system_out.as_deref(),
+                system_err: tc_system_err.as_deref(),
                 fk_test_file_run: filter_fk_test_file_run,
             };
 

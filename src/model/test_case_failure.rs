@@ -23,7 +23,7 @@ pub struct TestCaseFailure {
 #[table_name = "test_case_failure"]
 pub struct TestCaseFailureNew<'a> {
     pub fk_test_case: i32,
-    pub time: Option<f32>,
+    pub time: Option<&'a f32>,
     pub failure_message: Option<&'a str>,
     pub failure_type: Option<&'a str>,
     pub failure_description: Option<&'a str>,

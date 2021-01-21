@@ -21,7 +21,7 @@ pub struct TestCaseError {
 #[table_name = "test_case_error"]
 pub struct TestCaseErrorNew<'a> {
     pub fk_test_case: i32,
-    pub time: Option<f32>,
+    pub time: Option<&'a f32>,
     pub error_message: Option<&'a str>,
     pub error_type: Option<&'a str>,
     pub error_description: Option<&'a str>,

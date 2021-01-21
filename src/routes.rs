@@ -109,12 +109,12 @@ pub async fn test_case_error_add(
             &conn,
             1,
             1,
-            test_case_error.time,
-            test_case_error.error_message.as_ref(),
-            test_case_error.error_type.as_ref(),
-            test_case_error.error_description.as_ref(),
-            test_case_error.system_out.as_ref(),
-            test_case_error.system_err.as_ref(),
+            &test_case_error.time,
+            &test_case_error.error_message,
+            &test_case_error.error_type,
+            &test_case_error.error_description,
+            &test_case_error.system_out,
+            &test_case_error.system_err,
         )
     })
     .await
