@@ -7,6 +7,7 @@ use crate::plumbing::test_case_pass::add_test_case_pass;
 use crate::plumbing::test_file::add_test_file;
 use crate::plumbing::test_file_run::add_test_file_run;
 use crate::plumbing::test_run::add_test_run;
+use crate::plumbing::test_case_failure::add_test_case_failure;
 use crate::DbConnection;
 
 pub fn get_upload(
@@ -54,6 +55,19 @@ pub fn get_upload(
                     }
                     (None, Some(failmsg), None) => {
                         println!("fail");
+                        add_test_case_failure(
+                            conn,
+                            test_file_run.id,
+                            test_case.id,
+                            &Some(tc.time),
+                            &Some(failmsg.message.clone()),
+                            &Some(failmsg.failure_type.clone()),
+                            &Some(failmsg.description.clone()),
+                            &tc.system_out,
+                            &tc.system_err,
+
+
+                        );
                     }
                     (None, None, Some(tc_error)) => {
                         add_test_case_error(
