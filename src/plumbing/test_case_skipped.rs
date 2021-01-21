@@ -23,7 +23,7 @@ pub fn add_test_case_skipped(
         Err(_) => {
             let new_keyvalue = TestCaseSkippedNew {
                 fk_test_case: new_fk_test_case,
-                time: new_time.clone(),
+                time: new_time.as_ref(),
                 skipped_message: new_skipped_message.as_deref(),
                 fk_test_file_run: filter_fk_test_file_run,
             };

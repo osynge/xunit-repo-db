@@ -3,12 +3,15 @@ use crate::plumbing::project::add_project;
 use crate::plumbing::run_identifier::add_run_identifier;
 use crate::plumbing::test_case::add_test_case;
 use crate::plumbing::test_case_error::add_test_case_error;
+use crate::plumbing::test_case_failure::add_test_case_failure;
 use crate::plumbing::test_case_pass::add_test_case_pass;
+use crate::plumbing::test_case_skipped::add_test_case_skipped;
 use crate::plumbing::test_file::add_test_file;
 use crate::plumbing::test_file_run::add_test_file_run;
 use crate::plumbing::test_run::add_test_run;
-use crate::plumbing::test_case_failure::add_test_case_failure;
 use crate::DbConnection;
+
+use super::test_case;
 
 pub fn get_upload(
     conn: &DbConnection,
@@ -52,6 +55,13 @@ pub fn get_upload(
                 match (&tc.skipped, &tc.failure, &tc.error) {
                     (Some(skipmsg), None, None) => {
                         println!("Skip");
+                        add_test_case_skipped(
+                            conn,
+                            test_file_run.id,
+                            test_case.id,
+                            &Some(tc.time),
+                            &Some(skipmsg.clone()),
+                        )?;
                     }
                     (None, Some(failmsg), None) => {
                         println!("fail");
@@ -65,9 +75,7 @@ pub fn get_upload(
                             &Some(failmsg.description.clone()),
                             &tc.system_out,
                             &tc.system_err,
-
-
-                        );
+                        )?;
                     }
                     (None, None, Some(tc_error)) => {
                         add_test_case_error(
