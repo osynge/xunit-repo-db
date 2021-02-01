@@ -95,13 +95,30 @@ CREATE TABLE test_file_run (
     UNIQUE (fk_test_file, fk_test_run) ON CONFLICT ABORT
 );
 /*
- Many tests have the same name and classname
+ One test_suite will exist for each test case
+ */
+CREATE TABLE test_suite (
+    id INTEGER PRIMARY KEY NOT NULL,
+    name TEXT UNIQUE NOT NULL
+);
+/*
+ One test_class will exist for each test case
+ */
+CREATE TABLE test_case_class (
+    id INTEGER PRIMARY KEY NOT NULL,
+    name TEXT UNIQUE NOT NULL
+);
+/*
+ Many tests have the same name and classname and test suite
  */
 CREATE TABLE test_case (
     id INTEGER PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
-    classname TEXT NOT NULL,
-    UNIQUE (name, classname) ON CONFLICT ABORT
+    fk_test_case_class INTEGER NOT NULL,
+    fk_test_suite INTEGER NOT NULL,
+    FOREIGN KEY (fk_test_case_class) REFERENCES test_case_class (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    FOREIGN KEY (fk_test_suite) REFERENCES test_suite (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    UNIQUE (name, fk_test_case_class, fk_test_suite) ON CONFLICT ABORT
 );
 /*
  Allows grouping of many enviroments in a single run

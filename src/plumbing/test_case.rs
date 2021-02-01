@@ -7,19 +7,22 @@ use diesel::RunQueryDsl;
 pub fn add_test_case(
     conn: &DbConnection,
     new_name: &String,
-    new_classname: &String,
+    new_fk_test_class: i32,
+    new_fk_test_suite: i32,
 ) -> Result<TestCase, diesel::result::Error> {
     use crate::schema::test_case::dsl::*;
     match test_case
         .filter(name.eq(new_name))
-        .filter(classname.eq(new_classname))
+        .filter(fk_test_class.eq(new_fk_test_class))
+        .filter(fk_test_suite.eq(new_fk_test_suite))
         .first::<TestCase>(conn)
     {
         Ok(p) => return Ok(p),
         Err(_) => {
             let new_test_case_new = TestCaseNew {
                 name: new_name.as_str(),
-                classname: new_classname.as_str(),
+                fk_test_class: new_fk_test_class,
+                fk_test_suite: new_fk_test_suite,
             };
             insert_into(test_case)
                 .values(&new_test_case_new)

@@ -18,3 +18,5 @@ pub mod test_file;
 pub mod test_file_run;
 pub mod test_run;
 pub mod upload;
+pub mod test_suite;
+pub mod test_case_class;

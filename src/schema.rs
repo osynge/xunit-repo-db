@@ -47,7 +47,15 @@ table! {
     test_case (id) {
         id -> Integer,
         name -> Text,
-        classname -> Text,
+        fk_test_class -> Integer,
+        fk_test_suite -> Integer,
+    }
+}
+
+table! {
+    test_case_class (id) {
+        id -> Integer,
+        name -> Text,
     }
 }
 
@@ -125,10 +133,18 @@ table! {
     }
 }
 
+table! {
+    test_suite (id) {
+        id -> Integer,
+        name -> Text,
+    }
+}
+
 joinable!(bind_enviroment_keyvalue -> enviroment (fk_enviroment));
 joinable!(bind_enviroment_keyvalue -> keyvalue (fk_keyvalue));
 joinable!(enviroment -> project (fk_project));
 joinable!(run_identifier -> project (fk_project));
+joinable!(test_case -> test_suite (fk_test_suite));
 joinable!(test_case_error -> test_case (fk_test_case));
 joinable!(test_case_error -> test_file_run (fk_test_file_run));
 joinable!(test_case_failure -> test_case (fk_test_case));
@@ -148,6 +164,7 @@ allow_tables_to_appear_in_same_query!(
     project,
     run_identifier,
     test_case,
+    test_case_class,
     test_case_error,
     test_case_failure,
     test_case_pass,
@@ -155,4 +172,5 @@ allow_tables_to_appear_in_same_query!(
     test_file,
     test_file_run,
     test_run,
+    test_suite,
 );

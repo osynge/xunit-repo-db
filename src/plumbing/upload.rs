@@ -2,6 +2,7 @@ use crate::plumbing::enviroment::add_enviroment;
 use crate::plumbing::project::add_project;
 use crate::plumbing::run_identifier::add_run_identifier;
 use crate::plumbing::test_case::add_test_case;
+use crate::plumbing::test_case_class::add_test_case_class;
 use crate::plumbing::test_case_error::add_test_case_error;
 use crate::plumbing::test_case_failure::add_test_case_failure;
 use crate::plumbing::test_case_pass::add_test_case_pass;
@@ -9,6 +10,7 @@ use crate::plumbing::test_case_skipped::add_test_case_skipped;
 use crate::plumbing::test_file::add_test_file;
 use crate::plumbing::test_file_run::add_test_file_run;
 use crate::plumbing::test_run::add_test_run;
+use crate::plumbing::test_suite::add_test_suite;
 use crate::DbConnection;
 
 use super::test_case;
@@ -50,8 +52,10 @@ pub fn get_upload(
         let test_file_run = add_test_file_run(conn, test_file.id, tr.id)?;
 
         for ts in file_item.content.testsuite.iter() {
+            let test_suite = add_test_suite(conn, &ts.name)?;
             for tc in ts.testcase.iter() {
-                let test_case = add_test_case(conn, &tc.name, &tc.classname)?;
+                let test_case_class = add_test_case_class(conn, &tc.classname)?;
+                let test_case = add_test_case(conn, &tc.name, test_case_class.id, test_suite.id)?;
                 match (&tc.skipped, &tc.failure, &tc.error) {
                     (Some(skipmsg), None, None) => {
                         println!("Skip");
