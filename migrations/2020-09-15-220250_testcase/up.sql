@@ -11,10 +11,10 @@ CREATE TABLE project (
     human_name VARCHAR NOT NULL
 );
 /*
- Each project may have many enviroment for example a branch and an architecture.
- Enviroments can be shared with multiple projects.
+ Each project may have many environment for example a branch and an architecture.
+ Environments can be shared with multiple projects.
  */
-CREATE TABLE enviroment (
+CREATE TABLE environment (
     id INTEGER PRIMARY KEY NOT NULL,
     sk CHARACTER(32) UNIQUE NOT NULL,
     /*Hash of all key values*/
@@ -24,7 +24,7 @@ CREATE TABLE enviroment (
     best_before INT
 );
 /*
- Key value pairs make up the compoenents of an enviroment
+ Key value pairs make up the compoenents of an environment
  */
 CREATE TABLE keyvalue (
     id INTEGER PRIMARY KEY NOT NULL,
@@ -33,21 +33,21 @@ CREATE TABLE keyvalue (
     UNIQUE (key, value) ON CONFLICT ABORT
 );
 /*
- Enviroments are defined by the keyvalue that make them up.
+ Environments are defined by the keyvalue that make them up.
  */
-CREATE TABLE bind_enviroment_keyvalue (
+CREATE TABLE bind_environment_keyvalue (
     id INTEGER PRIMARY KEY NOT NULL,
-    fk_enviroment INTEGER NOT NULL,
+    fk_environment INTEGER NOT NULL,
     fk_keyvalue INTEGER NOT NULL,
-    FOREIGN KEY (fk_enviroment) REFERENCES enviroment (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    FOREIGN KEY (fk_environment) REFERENCES environment (id) ON DELETE CASCADE ON UPDATE NO ACTION,
     FOREIGN KEY (fk_keyvalue) REFERENCES keyvalue (id) ON DELETE CASCADE ON UPDATE NO ACTION,
-    UNIQUE (fk_enviroment, fk_keyvalue) ON CONFLICT ABORT
+    UNIQUE (fk_environment, fk_keyvalue) ON CONFLICT ABORT
 );
 /*
  A run_identifier uniquely describes a run.COLUMN_FORMAT
  
  When you are testing cross platform, for example in macos and linux,
- a run_identifier may be shared by these two enviroments.
+ a run_identifier may be shared by these two environments.
  
  */
 CREATE TABLE run_identifier (
@@ -66,17 +66,17 @@ CREATE TABLE run_identifier (
 /*
  At least one test_run happens for every run_identifier.
  
- This provides a way to bind enviroment to run_identifier.
+ This provides a way to bind environment to run_identifier.
  */
 CREATE TABLE test_run (
     id INTEGER PRIMARY KEY NOT NULL,
     sk CHARACTER(32) UNIQUE NOT NULL,
     created BigInt NOT NULL,
     fk_run_identifier INTEGER NOT NULL,
-    fk_enviroment INTEGER NOT NULL,
-    FOREIGN KEY (fk_enviroment) REFERENCES enviroment (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    fk_environment INTEGER NOT NULL,
+    FOREIGN KEY (fk_environment) REFERENCES environment (id) ON DELETE CASCADE ON UPDATE NO ACTION,
     FOREIGN KEY (fk_run_identifier) REFERENCES run_identifier (id) ON DELETE CASCADE ON UPDATE NO ACTION,
-    UNIQUE (fk_run_identifier, fk_enviroment) ON CONFLICT ABORT
+    UNIQUE (fk_run_identifier, fk_environment) ON CONFLICT ABORT
 );
 /*
  test_file have one or more test files
@@ -125,8 +125,8 @@ CREATE TABLE test_case (
     UNIQUE (name, fk_test_case_class, fk_test_suite) ON CONFLICT ABORT
 );
 /*
- Allows grouping of many enviroments in a single run
- this maybe shared across enviroments but not projects
+ Allows grouping of many environments in a single run
+ this maybe shared across environments but not projects
  */
 CREATE TABLE test_case_pass (
     id INTEGER PRIMARY KEY NOT NULL,
@@ -139,8 +139,8 @@ CREATE TABLE test_case_pass (
     UNIQUE (fk_test_case, fk_test_file_run) ON CONFLICT ABORT
 );
 /*
- Allows grouping of many enviroments in a single run
- this maybe shared across enviroments but not projects
+ Allows grouping of many environments in a single run
+ this maybe shared across environments but not projects
  */
 CREATE TABLE test_case_skipped (
     id INTEGER PRIMARY KEY NOT NULL,
@@ -154,8 +154,8 @@ CREATE TABLE test_case_skipped (
     UNIQUE (fk_test_case, fk_test_file_run) ON CONFLICT ABORT
 );
 /*
- Allows grouping of many enviroments in a single run
- this maybe shared across enviroments but not projects
+ Allows grouping of many environments in a single run
+ this maybe shared across environments but not projects
  */
 CREATE TABLE test_case_error (
     id INTEGER PRIMARY KEY NOT NULL,
@@ -173,8 +173,8 @@ CREATE TABLE test_case_error (
     UNIQUE (fk_test_case, fk_test_file_run) ON CONFLICT ABORT
 );
 /*
- Allows grouping of many enviroments in a single run
- this maybe shared across enviroments but not projects
+ Allows grouping of many environments in a single run
+ this maybe shared across environments but not projects
  */
 CREATE TABLE test_case_failure (
     id INTEGER PRIMARY KEY NOT NULL,
