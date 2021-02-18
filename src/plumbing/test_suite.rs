@@ -1,8 +1,10 @@
 use crate::model::test_suite::{TestSuite, TestSuiteNew};
 use crate::DbConnection;
+use chrono::Utc;
 use diesel::dsl::insert_into;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
+use uuid::Uuid;
 
 pub fn add_test_suite(
     conn: &DbConnection,
@@ -15,13 +17,11 @@ pub fn add_test_suite(
     {
         Ok(p) => return Ok(p),
         Err(_) => {
-            let new_test_suite_new = TestSuiteNew {
-                name: new_name.as_str(),
-            };
+            let new_test_run_new = TestSuiteNew { name: new_name };
             insert_into(test_suite)
-                .values(&new_test_suite_new)
+                .values(&new_test_run_new)
                 .execute(conn)
-                .expect("Error saving new test_suite_new");
+                .expect("Error saving new test_run_new");
 
             let result = test_suite.order(id.desc()).first(conn)?;
             Ok(result)

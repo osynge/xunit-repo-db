@@ -15,9 +15,9 @@ CREATE TABLE project (
  */
 CREATE TABLE enviroment (
     id INTEGER PRIMARY KEY NOT NULL,
-    sk CHARACTER(32) NOT NULL,
+    sk CHARACTER(32) UNIQUE NOT NULL,
     /*Hash of all key values*/
-    hash_keyvalue CHARACTER(32) UNIQUE NOT NULL,
+    hash_keyvalue CHARACTER(32) NOT NULL,
     /* Expire date,
      None for a branch, with a date for a Pull Request */
     best_before INT,

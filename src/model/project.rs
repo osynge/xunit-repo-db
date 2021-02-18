@@ -22,3 +22,13 @@ pub struct ProjectJson {
     pub identiifier: Option<String>,
     pub human_name: Option<String>,
 }
+
+impl From<Project> for ProjectJson {
+    fn from(project: Project) -> Self {
+        ProjectJson {
+            sk: Some(project.sk),
+            identiifier: Some(project.identiifier),
+            human_name: Some(project.human_name),
+        }
+    }
+}
