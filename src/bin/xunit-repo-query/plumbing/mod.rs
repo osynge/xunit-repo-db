@@ -1,2 +1,2 @@
-pub mod enviroment;
+pub mod environment;
 pub mod project;

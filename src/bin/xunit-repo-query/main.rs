@@ -29,7 +29,7 @@ async fn main() -> std::io::Result<()> {
             .route("/v1/project/all", web::get().to(routes::project_get_all))
             .route(
                 "/v1/env/all",
-                web::get().to(routes::enviroments_for_project),
+                web::get().to(routes::environments_for_project),
             )
     })
     .bind("127.0.0.1:8080")?
