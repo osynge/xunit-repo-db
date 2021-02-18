@@ -23,14 +23,10 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .data(database_pool.clone())
-            .service(crate::routes::index)
+            /*.service(crate::routes::index)*/
             .route("/", web::get().to(routes::home))
             .route("/index.js", web::get().to(routes::index_js))
             .route("/v1/project/all", web::get().to(routes::project_get_all))
-            .route(
-                "/v1/env/all",
-                web::get().to(routes::environments_for_project),
-            )
     })
     .bind("127.0.0.1:8080")?
     .run()

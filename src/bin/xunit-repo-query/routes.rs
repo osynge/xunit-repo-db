@@ -1,10 +1,8 @@
-use std::str::FromStr;
-
-use crate::plumbing::environment::get_all_environments_for_project;
 use crate::plumbing::project::get_all_project;
 use crate::Pool;
 use actix_web::http::StatusCode;
 use actix_web::{get, http, web, Error, HttpRequest, HttpResponse, Result};
+use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
 pub async fn home() -> Result<HttpResponse, Error> {
@@ -27,17 +25,6 @@ pub async fn project_get_all(pool: web::Data<Pool>) -> Result<HttpResponse, Erro
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
-pub async fn environments_for_project(pool: web::Data<Pool>) -> Result<HttpResponse, Error> {
-    let conn = pool.get().unwrap();
-    let project_sk = String::from("39ebea0f-01d4-4623-8b8e-656eb4dad9cd");
-    Ok(
-        web::block(move || get_all_environments_for_project(&conn, &project_sk))
-            .await
-            .map(|project| HttpResponse::Created().json(project))
-            .map_err(|_| HttpResponse::InternalServerError())?,
-    )
-}
-
 #[derive(Serialize, Deserialize)]
 struct MyObj {
     name: String,
@@ -56,7 +43,7 @@ fn get_content_type<'a>(
     }
     Ok(output)
 }
-
+/*
 #[get("/a/{name}")]
 async fn index(
     request: HttpRequest,
@@ -88,3 +75,4 @@ async fn index(
             .map_err(|_| HttpResponse::InternalServerError())?,
     )
 }
+*/
