@@ -20,5 +20,4 @@ fn create_user_with_phone_and_email() {
         .values(&new_keyvalue)
         .execute(fred)
         .expect("Error saving new keyvalue");
-
 }
