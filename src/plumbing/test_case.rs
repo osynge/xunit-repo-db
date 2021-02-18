@@ -13,7 +13,7 @@ pub fn add_test_case(
     use crate::schema::test_case::dsl::*;
     match test_case
         .filter(name.eq(new_name))
-        .filter(fk_test_class.eq(new_fk_test_class))
+        .filter(fk_test_case_class.eq(new_fk_test_class))
         .filter(fk_test_suite.eq(new_fk_test_suite))
         .first::<TestCase>(conn)
     {
@@ -21,7 +21,7 @@ pub fn add_test_case(
         Err(_) => {
             let new_test_case_new = TestCaseNew {
                 name: new_name.as_str(),
-                fk_test_class: new_fk_test_class,
+                fk_test_case_class: new_fk_test_class,
                 fk_test_suite: new_fk_test_suite,
             };
             insert_into(test_case)

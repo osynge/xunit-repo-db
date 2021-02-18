@@ -29,7 +29,6 @@ pub fn get_upload(
     println!("project:{:#?}", project);
     let env = add_enviroment(
         conn,
-        project.id,
         item.enviroment.sk.as_ref(),
         Some(&item.enviroment.key_value),
     )?;

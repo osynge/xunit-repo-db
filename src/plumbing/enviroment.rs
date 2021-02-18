@@ -11,45 +11,38 @@ use uuid::Uuid;
 
 fn enviroment_get_by_sk_hash_keyvalue(
     conn: &DbConnection,
-    filter_fk_project: i32,
     filter_sk: &String,
     filter_hash_keyvalue: &String,
 ) -> Result<Enviroment, diesel::result::Error> {
     use crate::schema::enviroment::dsl::*;
     enviroment
         .filter(sk.eq(filter_sk))
-        .filter(fk_project.eq(filter_fk_project))
         .filter(hash_keyvalue.eq(filter_hash_keyvalue))
         .first::<Enviroment>(conn)
 }
 
 fn enviroment_get_by_hash_keyvalue(
     conn: &DbConnection,
-    filter_fk_project: i32,
     filter_hash_keyvalue: &String,
 ) -> Result<Enviroment, diesel::result::Error> {
     use crate::schema::enviroment::dsl::*;
     enviroment
         .filter(hash_keyvalue.eq(filter_hash_keyvalue))
-        .filter(fk_project.eq(filter_fk_project))
         .first::<Enviroment>(conn)
 }
 
 fn enviroment_get_by_sk(
     conn: &DbConnection,
-    filter_fk_project: i32,
     filter_sk: &String,
 ) -> Result<Enviroment, diesel::result::Error> {
     use crate::schema::enviroment::dsl::*;
     enviroment
         .filter(sk.eq(filter_sk))
-        .filter(fk_project.eq(filter_fk_project))
         .first::<Enviroment>(conn)
 }
 
 fn enviroment_insert_sk_hash_keyvalue(
     conn: &DbConnection,
-    insert_fk_project: i32,
     insert_sk: &String,
     insert_hash_keyvalue: &String,
 ) -> Result<Enviroment, diesel::result::Error> {
@@ -59,7 +52,6 @@ fn enviroment_insert_sk_hash_keyvalue(
         sk: &insert_sk,
         hash_keyvalue: &insert_hash_keyvalue,
         best_before: None,
-        fk_project: insert_fk_project,
     };
     insert_into(enviroment)
         .values(&new_link)
@@ -72,7 +64,6 @@ fn enviroment_insert_sk_hash_keyvalue(
 
 fn enviroment_insert_hash_keyvalue(
     conn: &DbConnection,
-    insert_fk_project: i32,
     insert_hash_keyvalue: &String,
 ) -> Result<Enviroment, diesel::result::Error> {
     use crate::schema::enviroment::dsl::*;
@@ -81,7 +72,6 @@ fn enviroment_insert_hash_keyvalue(
         sk: &insert_sk,
         hash_keyvalue: &insert_hash_keyvalue,
         best_before: None,
-        fk_project: insert_fk_project,
     };
     insert_into(enviroment)
         .values(&new_link)
@@ -105,14 +95,13 @@ fn keyvalue_hash_gen(keyvalue: &HashMap<String, String>) -> String {
 
 fn insert_enviroment(
     conn: &DbConnection,
-    fk_project: i32,
     sk: &String,
     keyvalue: &HashMap<String, String>,
     keyvalue_hash: &String,
 ) -> Result<Enviroment, diesel::result::Error> {
     let keyvalue_hash = keyvalue_hash_gen(keyvalue);
 
-    let insert = enviroment_insert_sk_hash_keyvalue(conn, fk_project, &sk, &keyvalue_hash);
+    let insert = enviroment_insert_sk_hash_keyvalue(conn, &sk, &keyvalue_hash);
     match insert {
         Ok(env) => {
             for (key, value) in keyvalue.into_iter() {
@@ -141,16 +130,15 @@ fn insert_enviroment(
 
 pub fn add_enviroment(
     conn: &DbConnection,
-    fk_project: i32,
     enviroment_sk: Option<&String>,
     enviroment_key_value: Option<&HashMap<String, String>>,
 ) -> Result<Enviroment, diesel::result::Error> {
     match (enviroment_sk, enviroment_key_value) {
         (Some(sk), Some(kv)) => {
             let keyvalue_hash = keyvalue_hash_gen(kv);
-            match enviroment_get_by_sk_hash_keyvalue(conn, fk_project, &sk, &keyvalue_hash) {
+            match enviroment_get_by_sk_hash_keyvalue(conn, &sk, &keyvalue_hash) {
                 Ok(p) => Ok(p),
-                Err(_) => insert_enviroment(conn, fk_project, sk, kv, &keyvalue_hash),
+                Err(_) => insert_enviroment(conn, sk, kv, &keyvalue_hash),
             }
         }
 
@@ -158,12 +146,12 @@ pub fn add_enviroment(
             let sk = Uuid::new_v4().to_string();
 
             let keyvalue_hash = keyvalue_hash_gen(kv);
-            match enviroment_get_by_hash_keyvalue(conn, fk_project, &keyvalue_hash) {
+            match enviroment_get_by_hash_keyvalue(conn, &keyvalue_hash) {
                 Ok(p) => Ok(p),
-                Err(_) => insert_enviroment(conn, fk_project, &sk, kv, &keyvalue_hash),
+                Err(_) => insert_enviroment(conn, &sk, kv, &keyvalue_hash),
             }
         }
         (None, None) => Err(diesel::result::Error::NotFound),
-        (Some(sk), None) => enviroment_get_by_sk(conn, fk_project, &sk),
+        (Some(sk), None) => enviroment_get_by_sk(conn, &sk),
     }
 }

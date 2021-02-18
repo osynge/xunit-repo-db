@@ -6,7 +6,8 @@ pub fn run_migrations(conn: &SqliteConnection) {
     let _ = diesel_migrations::run_pending_migrations(&*conn);
 }
 
-#[cfg(not(test))]
+#[cfg(test)]
+
 pub fn establish_connection() -> Pool {
     let manager = ConnectionManager::<SqliteConnection>::new(":memory:");
     let pool = Pool::builder()
@@ -18,7 +19,7 @@ pub fn establish_connection() -> Pool {
     pool
 }
 
-#[cfg(test)]
+#[cfg(not(test))]
 pub fn establish_connection() -> Pool {
     dotenv::dotenv().ok();
     println!("elephant");

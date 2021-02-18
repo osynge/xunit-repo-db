@@ -12,6 +12,7 @@ CREATE TABLE project (
 );
 /*
  Each project may have many enviroment for example a branch and an architecture.
+ Enviroments can be shared with multiple projects.
  */
 CREATE TABLE enviroment (
     id INTEGER PRIMARY KEY NOT NULL,
@@ -20,9 +21,7 @@ CREATE TABLE enviroment (
     hash_keyvalue CHARACTER(32) NOT NULL,
     /* Expire date,
      None for a branch, with a date for a Pull Request */
-    best_before INT,
-    fk_project INTEGER NOT NULL,
-    FOREIGN KEY (fk_project) REFERENCES project (id) ON DELETE CASCADE ON UPDATE NO ACTION
+    best_before INT
 );
 /*
  Key value pairs make up the compoenents of an enviroment
@@ -45,8 +44,11 @@ CREATE TABLE bind_enviroment_keyvalue (
     UNIQUE (fk_enviroment, fk_keyvalue) ON CONFLICT ABORT
 );
 /*
- Allows grouping of many enviroments in a single run
- this maybe shared across enviroments but not projects
+ A run_identifier uniquely describes a run.COLUMN_FORMAT
+ 
+ When you are testing cross platform, for example in macos and linux,
+ a run_identifier may be shared by these two enviroments.
+ 
  */
 CREATE TABLE run_identifier (
     id INTEGER PRIMARY KEY NOT NULL,
@@ -62,7 +64,9 @@ CREATE TABLE run_identifier (
     UNIQUE (client_identifier, fk_project) ON CONFLICT ABORT
 );
 /*
- test_run Happens in an enviroments for a run identifier
+ At least one test_run happens for every run_identifier.
+ 
+ This provides a way to bind enviroment to run_identifier.
  */
 CREATE TABLE test_run (
     id INTEGER PRIMARY KEY NOT NULL,

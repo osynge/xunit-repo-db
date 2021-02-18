@@ -12,7 +12,6 @@ table! {
         sk -> Text,
         hash_keyvalue -> Text,
         best_before -> Nullable<Integer>,
-        fk_project -> Integer,
     }
 }
 
@@ -47,7 +46,7 @@ table! {
     test_case (id) {
         id -> Integer,
         name -> Text,
-        fk_test_class -> Integer,
+        fk_test_case_class -> Integer,
         fk_test_suite -> Integer,
     }
 }
@@ -142,8 +141,8 @@ table! {
 
 joinable!(bind_enviroment_keyvalue -> enviroment (fk_enviroment));
 joinable!(bind_enviroment_keyvalue -> keyvalue (fk_keyvalue));
-joinable!(enviroment -> project (fk_project));
 joinable!(run_identifier -> project (fk_project));
+joinable!(test_case -> test_case_class (fk_test_case_class));
 joinable!(test_case -> test_suite (fk_test_suite));
 joinable!(test_case_error -> test_case (fk_test_case));
 joinable!(test_case_error -> test_file_run (fk_test_file_run));
