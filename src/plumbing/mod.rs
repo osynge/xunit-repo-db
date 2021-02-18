@@ -1,7 +1,7 @@
-pub mod bind_enviroment_keyvalue;
-pub mod enviroment;
+pub mod bind_environment_keyvalue;
+pub mod environment;
 #[cfg(test)]
-mod enviroment_test;
+mod environment_test;
 pub mod keyvalue;
 #[cfg(test)]
 mod keyvalue_test;

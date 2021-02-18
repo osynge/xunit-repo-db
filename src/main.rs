@@ -24,7 +24,7 @@ async fn main() -> std::io::Result<()> {
             .route("/", web::get().to(routes::home))
             .route("/project_add", web::post().to(routes::project_add))
             .route("/keyvalue_add", web::post().to(routes::keyvalue_add))
-            .route("/enviroment_add", web::post().to(routes::enviroment_add))
+            .route("/environment_add", web::post().to(routes::environment_add))
             .route("/run_add", web::post().to(routes::run_add))
             .route(
                 "/test_case_error_add",

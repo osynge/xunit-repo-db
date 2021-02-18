@@ -1,13 +1,13 @@
 table! {
-    bind_enviroment_keyvalue (id) {
+    bind_environment_keyvalue (id) {
         id -> Integer,
-        fk_enviroment -> Integer,
+        fk_environment -> Integer,
         fk_keyvalue -> Integer,
     }
 }
 
 table! {
-    enviroment (id) {
+    environment (id) {
         id -> Integer,
         sk -> Text,
         hash_keyvalue -> Text,
@@ -128,7 +128,7 @@ table! {
         sk -> Text,
         created -> BigInt,
         fk_run_identifier -> Integer,
-        fk_enviroment -> Integer,
+        fk_environment -> Integer,
     }
 }
 
@@ -139,8 +139,8 @@ table! {
     }
 }
 
-joinable!(bind_enviroment_keyvalue -> enviroment (fk_enviroment));
-joinable!(bind_enviroment_keyvalue -> keyvalue (fk_keyvalue));
+joinable!(bind_environment_keyvalue -> environment (fk_environment));
+joinable!(bind_environment_keyvalue -> keyvalue (fk_keyvalue));
 joinable!(run_identifier -> project (fk_project));
 joinable!(test_case -> test_case_class (fk_test_case_class));
 joinable!(test_case -> test_suite (fk_test_suite));
@@ -153,12 +153,12 @@ joinable!(test_case_pass -> test_file_run (fk_test_file_run));
 joinable!(test_case_skipped -> test_case (fk_test_case));
 joinable!(test_case_skipped -> test_file_run (fk_test_file_run));
 joinable!(test_file_run -> test_file (fk_test_file));
-joinable!(test_run -> enviroment (fk_enviroment));
+joinable!(test_run -> environment (fk_environment));
 joinable!(test_run -> run_identifier (fk_run_identifier));
 
 allow_tables_to_appear_in_same_query!(
-    bind_enviroment_keyvalue,
-    enviroment,
+    bind_environment_keyvalue,
+    environment,
     keyvalue,
     project,
     run_identifier,

@@ -1,4 +1,4 @@
-use crate::model::enviroment::EnviromentJson;
+use crate::model::environment::EnvironmentJson;
 use crate::model::keyvalue::KeyValueJson;
 use crate::model::project::ProjectJson;
 use crate::model::run_identifier::RunIdentifierJson;
@@ -6,7 +6,7 @@ use crate::model::test_case_error::TestCaseErrorJson;
 use crate::model::test_case_failure::TestCaseFailureJson;
 use crate::model::test_case_pass::TestCasePassJson;
 use crate::model::test_case_skipped::TestCaseSkippedJson;
-use crate::plumbing::enviroment::add_enviroment;
+use crate::plumbing::environment::add_environment;
 use crate::plumbing::keyvalue::add_keyvalue;
 use crate::plumbing::project::add_project;
 use crate::plumbing::run_identifier::add_run_identifier;
@@ -59,14 +59,14 @@ pub async fn keyvalue_add(
     )
 }
 
-pub async fn enviroment_add(
+pub async fn environment_add(
     pool: web::Data<Pool>,
-    item: web::Json<EnviromentJson>,
+    item: web::Json<EnvironmentJson>,
 ) -> Result<HttpResponse, Error> {
-    let enviroment = item.into_inner();
+    let environment = item.into_inner();
     let conn = pool.get().unwrap();
     Ok(web::block(move || {
-        add_enviroment(&conn, enviroment.sk.as_ref(), enviroment.key_value.as_ref())
+        add_environment(&conn, environment.sk.as_ref(), environment.key_value.as_ref())
     })
     .await
     .map(|project| HttpResponse::Created().json(project))

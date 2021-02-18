@@ -9,12 +9,12 @@ use uuid::Uuid;
 pub fn add_test_run(
     conn: &DbConnection,
     new_fk_run_identifier: i32,
-    new_fk_enviroment: i32,
+    new_fk_environment: i32,
 ) -> Result<TestRun, diesel::result::Error> {
     use crate::schema::test_run::dsl::*;
     match test_run
         .filter(fk_run_identifier.eq(new_fk_run_identifier))
-        .filter(fk_enviroment.eq(new_fk_enviroment))
+        .filter(fk_environment.eq(new_fk_environment))
         .first::<TestRun>(conn)
     {
         Ok(p) => return Ok(p),
@@ -25,7 +25,7 @@ pub fn add_test_run(
             let new_test_run_new = TestRunNew {
                 sk: &new_sk,
                 fk_run_identifier: new_fk_run_identifier,
-                fk_enviroment: new_fk_enviroment,
+                fk_environment: new_fk_environment,
                 created: new_created,
             };
             insert_into(test_run)

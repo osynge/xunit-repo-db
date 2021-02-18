@@ -1,4 +1,4 @@
-use crate::plumbing::enviroment::add_enviroment;
+use crate::plumbing::environment::add_environment;
 use crate::plumbing::project::add_project;
 use crate::plumbing::run_identifier::add_run_identifier;
 use crate::plumbing::test_case::add_test_case;
@@ -27,10 +27,10 @@ pub fn get_upload(
         item.project.human_name.as_ref(),
     )?;
     println!("project:{:#?}", project);
-    let env = add_enviroment(
+    let env = add_environment(
         conn,
-        item.enviroment.sk.as_ref(),
-        Some(&item.enviroment.key_value),
+        item.environment.sk.as_ref(),
+        Some(&item.environment.key_value),
     )?;
     println!("env:{:#?}", env);
     let run = add_run_identifier(

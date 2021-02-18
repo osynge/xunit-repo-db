@@ -1,5 +1,5 @@
-pub mod bind_enviroment_keyvalue;
-pub mod enviroment;
+pub mod bind_environment_keyvalue;
+pub mod environment;
 pub mod keyvalue;
 pub mod project;
 pub mod run_identifier;
