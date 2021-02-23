@@ -10,21 +10,21 @@ use xunit_repo::schema::project::human_name;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProjectJson {
     pub sk: String,
-    pub identiifier: String,
+    pub identifier: String,
     pub human_name: String,
 }
 
 pub fn get_all_project(conn: &DbConnection) -> Result<Vec<ProjectJson>, diesel::result::Error> {
     use crate::schema::project::dsl::*;
     let tmp = project
-        .select((sk, identiifier, human_name))
+        .select((sk, identifier, human_name))
         .order(id.desc())
         .load::<(String, String, String)>(conn)?;
     let result = tmp
         .into_iter()
-        .map(|(new_sk, new_identiifier, new_human_name)| ProjectJson {
+        .map(|(new_sk, new_identifier, new_human_name)| ProjectJson {
             sk: new_sk,
-            identiifier: new_identiifier,
+            identifier: new_identifier,
             human_name: new_human_name,
         })
         .collect();
