@@ -36,7 +36,7 @@ pub async fn project_add(
         add_project(
             &conn,
             project.sk.as_ref(),
-            project.identiifier.as_ref(),
+            project.identifier.as_ref(),
             project.human_name.as_ref(),
         )
     })
@@ -208,7 +208,7 @@ mod tests {
                 .route("/homessss", web::post().to(home)),
         )
         .await;
-        let ti = r#"{ "sk": "mykey", "identiifier": "identiifier2", "human_name" : "sdfsdfsf" }"#;
+        let ti = r#"{ "sk": "mykey", "identifier": "identifier2", "human_name" : "sdfsdfsf" }"#;
 
         //let req = test::TestRequest::post().uri("/").to_request();
         let req = test::TestRequest::post()
@@ -234,7 +234,7 @@ mod tests {
                 .route("/addlink", web::post().to(add_link_noop)),
         )
         .await;
-        let ti = r#"{ "sk": "mykey", "identiifier": "identiifier2", "human_name" : "sdfsdfsf" }"#
+        let ti = r#"{ "sk": "mykey", "identifier": "identifier2", "human_name" : "sdfsdfsf" }"#
             .as_bytes();
         //let req = test::TestRequest::post().uri("/").to_request();
         let req = test::TestRequest::post()

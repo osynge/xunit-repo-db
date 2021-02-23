@@ -5,8 +5,8 @@ PRAGMA foreign_keys = ON;
 CREATE TABLE project (
     id INTEGER PRIMARY KEY NOT NULL,
     sk CHARACTER(32) UNIQUE NOT NULL,
-    -- identiifier of a project
-    identiifier VARCHAR UNIQUE NOT NULL,
+    -- identifier of a project
+    identifier VARCHAR UNIQUE NOT NULL,
     -- HUman name for project
     human_name VARCHAR NOT NULL
 );

@@ -23,7 +23,7 @@ pub fn get_upload(
     let project = add_project(
         conn,
         item.project.sk.as_ref(),
-        item.project.identiifier.as_ref(),
+        item.project.identifier.as_ref(),
         item.project.human_name.as_ref(),
     )?;
     println!("project:{:#?}", project);

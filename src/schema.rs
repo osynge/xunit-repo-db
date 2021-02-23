@@ -27,7 +27,7 @@ table! {
     project (id) {
         id -> Integer,
         sk -> Text,
-        identiifier -> Text,
+        identifier -> Text,
         human_name -> Text,
     }
 }

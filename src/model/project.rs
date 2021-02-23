@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 pub struct Project {
     pub id: i32,
     pub sk: String,
-    pub identiifier: String,
+    pub identifier: String,
     pub human_name: String,
 }
 
@@ -12,14 +12,14 @@ pub struct Project {
 #[table_name = "project"]
 pub struct ProjectNew<'a> {
     pub sk: &'a str,
-    pub identiifier: &'a str,
+    pub identifier: &'a str,
     pub human_name: &'a str,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProjectJson {
     pub sk: Option<String>,
-    pub identiifier: Option<String>,
+    pub identifier: Option<String>,
     pub human_name: Option<String>,
 }
 
@@ -27,7 +27,7 @@ impl From<Project> for ProjectJson {
     fn from(project: Project) -> Self {
         ProjectJson {
             sk: Some(project.sk),
-            identiifier: Some(project.identiifier),
+            identifier: Some(project.identifier),
             human_name: Some(project.human_name),
         }
     }
