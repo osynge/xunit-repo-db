@@ -1,7 +1,6 @@
 use crate::model::test_file;
 use crate::model::test_run;
 use crate::schema::*;
-use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[table_name = "test_file_run"]

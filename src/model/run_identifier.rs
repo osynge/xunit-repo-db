@@ -1,6 +1,5 @@
 use crate::model::project;
 use crate::schema::*;
-use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[table_name = "run_identifier"]

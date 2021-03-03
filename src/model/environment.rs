@@ -1,6 +1,4 @@
-use crate::model::project;
 use crate::schema::*;
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Debug, Serialize, Deserialize, Queryable)]

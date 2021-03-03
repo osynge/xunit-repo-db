@@ -1,7 +1,6 @@
 use crate::model::environment;
 use crate::model::run_identifier;
 use crate::schema::*;
-use serde::{Deserialize, Serialize};
 
 /*
 

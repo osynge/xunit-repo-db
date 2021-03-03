@@ -1,7 +1,6 @@
 use crate::model::environment;
 use crate::model::keyvalue;
 use crate::schema::*;
-use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[table_name = "bind_environment_keyvalue"]

@@ -1,5 +1,5 @@
 use crate::schema::*;
-use serde::{Deserialize, Serialize};
+
 #[derive(Debug, Serialize, Deserialize, Queryable)]
 pub struct TestCaseClass {
     pub id: i32,
