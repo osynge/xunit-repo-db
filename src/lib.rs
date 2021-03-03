@@ -5,6 +5,7 @@ extern crate diesel_migrations;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde;
+extern crate url;
 pub mod db;
 pub mod model;
 pub mod schema;
