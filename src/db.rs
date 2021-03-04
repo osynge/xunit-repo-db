@@ -1,26 +1,26 @@
+use crate::schema::*;
 use crate::Pool;
 use diesel::prelude::*;
 use diesel::r2d2::ConnectionManager;
 use diesel::SqliteConnection;
 use url::Url;
 
-embed_migrations!("migrations");
+embed_migrations!();
 pub fn run_migrations(conn: &SqliteConnection) {
-    let _ = diesel_migrations::run_pending_migrations(&*conn);
+    embedded_migrations::run(conn);
 }
 
 pub fn sql_lite_establish_connection_mem() -> Pool {
     let manager = ConnectionManager::<SqliteConnection>::new(":memory:");
-    let pool = Pool::builder()
+    let database_pool = Pool::builder()
         .build(manager)
         .expect("Failed to create DB pool.");
 
-    run_migrations(&pool.get().unwrap());
-    println!("dfsdf");
-    pool
+    run_migrations(&database_pool.get().unwrap());
+    database_pool
 }
 
-pub fn sql_lite_establish_connection_2(database_path: &str, create_db: bool) -> Pool {
+pub fn sql_lite_establish_connection_file(database_path: &str, create_db: bool) -> Pool {
     if create_db {
         let connection = SqliteConnection::establish(&database_path).unwrap();
         run_migrations(&connection);
@@ -28,14 +28,14 @@ pub fn sql_lite_establish_connection_2(database_path: &str, create_db: bool) -> 
     let database_pool = Pool::builder()
         .build(ConnectionManager::<SqliteConnection>::new(database_path))
         .expect("Failed to create DB pool.");
-
+    run_migrations(&database_pool.get().unwrap());
     database_pool
 }
 pub fn establish_connection_pool(input: &str, create_db: bool) -> Pool {
     let dburl = Url::parse(input).unwrap();
     match dburl.scheme() {
         "memory" => sql_lite_establish_connection_mem(),
-        "sqlite" => sql_lite_establish_connection_2(dburl.path(), create_db),
+        "sqlite" => sql_lite_establish_connection_file(dburl.path(), create_db),
         _ => {
             panic!("url scheme is invalid.");
         }
@@ -55,6 +55,7 @@ mod tests {
             tempdir::TempDir::new("establish_connection_on_disk").expect("create temp dir");
         let file_path = tmp_dir.path().join("sqlite.db");
         let url = format!("sqlite://{}", file_path.to_str().unwrap());
-        establish_connection_pool(&url, true).get().unwrap();
+        let foo = establish_connection_pool(&url, true).get().unwrap();
+        foo.begin_test_transaction();
     }
 }
