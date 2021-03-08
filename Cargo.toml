@@ -17,6 +17,7 @@ chrono = "0.4.15"
 url = "2.2.1"
 uuid = { version = "0.8", features = ["serde", "v4"] }
 diesel_migrations = "1.4.0"
+thiserror = "*"
 
 [dev-dependencies]
 tempdir = "0.3"
