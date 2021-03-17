@@ -95,6 +95,7 @@ CREATE TABLE test_file_run (
     sk CHARACTER(32) UNIQUE NOT NULL,
     fk_test_file INTEGER NOT NULL,
     fk_test_run INTEGER NOT NULL,
+    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
     FOREIGN KEY (fk_test_file) REFERENCES test_file (id) ON DELETE CASCADE ON UPDATE NO ACTION,
     UNIQUE (fk_test_file, fk_test_run) ON CONFLICT ABORT
 );

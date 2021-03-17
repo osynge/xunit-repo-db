@@ -153,6 +153,7 @@ joinable!(test_case_pass -> test_file_run (fk_test_file_run));
 joinable!(test_case_skipped -> test_case (fk_test_case));
 joinable!(test_case_skipped -> test_file_run (fk_test_file_run));
 joinable!(test_file_run -> test_file (fk_test_file));
+joinable!(test_file_run -> test_run (fk_test_run));
 joinable!(test_run -> environment (fk_environment));
 joinable!(test_run -> run_identifier (fk_run_identifier));
 
