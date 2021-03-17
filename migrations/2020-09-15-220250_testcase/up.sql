@@ -118,6 +118,7 @@ CREATE TABLE test_case_class (
  */
 CREATE TABLE test_case (
     id INTEGER PRIMARY KEY NOT NULL,
+    sk CHARACTER(32) UNIQUE NOT NULL,
     name TEXT NOT NULL,
     fk_test_case_class INTEGER NOT NULL,
     fk_test_suite INTEGER NOT NULL,

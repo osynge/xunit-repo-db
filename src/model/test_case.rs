@@ -8,6 +8,7 @@ use crate::schema::*;
 #[belongs_to(test_suite::TestSuite, foreign_key = "fk_test_suite")]
 pub struct TestCase {
     pub id: i32,
+    pub sk: String,
     pub name: String,
     pub fk_test_case_class: i32,
     pub fk_test_suite: i32,
@@ -16,6 +17,7 @@ pub struct TestCase {
 #[derive(Debug, Insertable)]
 #[table_name = "test_case"]
 pub struct TestCaseNew<'a> {
+    pub sk: &'a str,
     pub name: &'a str,
     pub fk_test_case_class: i32,
     pub fk_test_suite: i32,
@@ -23,6 +25,7 @@ pub struct TestCaseNew<'a> {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TestCaseJson {
+    pub sk: Option<String>,
     pub name: String,
     pub fk_test_case_class: i32,
     pub fk_test_suite: i32,

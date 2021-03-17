@@ -45,6 +45,7 @@ table! {
 table! {
     test_case (id) {
         id -> Integer,
+        sk -> Text,
         name -> Text,
         fk_test_case_class -> Integer,
         fk_test_suite -> Integer,
