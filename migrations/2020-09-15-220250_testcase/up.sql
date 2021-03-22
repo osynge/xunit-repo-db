@@ -19,8 +19,8 @@ CREATE TABLE project (
  Each project can have many environments, for example a branch and an
  architecture. Environments can be shared with multiple projects.
 
- @hash_keyvalue - A hash of the key/value???
- @best_before - Expiry date of the environment. Useful for pull requests.???
+ @hash_keyvalue - A hash of the key/value
+ @best_before - Expiry date of the environment. Useful for pull requests
  */
 CREATE TABLE environment (
     id INTEGER PRIMARY KEY NOT NULL,
@@ -44,8 +44,6 @@ CREATE TABLE keyvalue (
 
 /*
  Environments are defined by the keyvalue that make them up.
-
- ???For example "macos-main" as environment-branch?
  */
 CREATE TABLE bind_environment_keyvalue (
     id INTEGER PRIMARY KEY NOT NULL,
@@ -62,8 +60,8 @@ CREATE TABLE bind_environment_keyvalue (
  When you are testing cross platform, for example in macos and linux,
  a run_identifier may be shared by these two environments.
 
- @client_identifier - Specifies an identifier for the run. For example GIT_COMMIT + CI/CD BUILD_NUMBER.
- @created - The time when this run was started.
+ @client_identifier - Specifies an identifier for the run. For example GIT_COMMIT + CI/CD BUILD_NUMBER
+ @created - The time when this run was started
  */
 CREATE TABLE run_identifier (
     id INTEGER PRIMARY KEY NOT NULL,
@@ -93,8 +91,6 @@ CREATE TABLE test_run (
 );
 
 /*
- ???why not have one test_file_path???
-
  @directory - The directory of the test file
  @file_name - The name of the test file
  */
@@ -113,6 +109,7 @@ CREATE TABLE test_file_run (
     sk CHARACTER(32) UNIQUE NOT NULL,
     fk_test_file INTEGER NOT NULL,
     fk_test_run INTEGER NOT NULL,
+    FOREIGN KEY (fk_test_run) REFERENCES test_run (id) ON DELETE CASCADE ON UPDATE NO ACTION,
     FOREIGN KEY (fk_test_file) REFERENCES test_file (id) ON DELETE CASCADE ON UPDATE NO ACTION,
     UNIQUE (fk_test_file, fk_test_run) ON CONFLICT ABORT
 );
@@ -186,9 +183,6 @@ CREATE TABLE test_case_skipped (
 );
 
 /*
- ???Allows grouping of many environments in a single run
- this maybe shared across environments but not projects???missing _message and _description
-
  An error indicates that the test encountered a untypical problem. This could be
  a crash or (uncatched) exception during test run, outside your test assertions/checks.
 
@@ -213,9 +207,6 @@ CREATE TABLE test_case_error (
 );
 
 /*
- ???Allows grouping of many environments in a single run
- this maybe shared across environments but not projects???system_out and system_err should be separate, right and have a reference to test_case???
-
  A failure indicates that the test failed. It is a condition in which that test failed,
  given the checks, for example `assertEquals`.
 
