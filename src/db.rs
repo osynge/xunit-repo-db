@@ -1,4 +1,5 @@
 use crate::schema::*;
+use crate::ConnectionError;
 use crate::Pool;
 use diesel::prelude::*;
 use diesel::r2d2::ConnectionManager;
@@ -9,20 +10,6 @@ use url::{Host, Url};
 embed_migrations!();
 pub fn run_migrations(conn: &SqliteConnection) {
     embedded_migrations::run(conn);
-}
-
-#[derive(Error, Debug)]
-pub enum ConnectionError {
-    #[error("url parsing error")]
-    UrlParseError(#[from] url::ParseError),
-    #[error("io parsing error")]
-    IoErr(#[from] std::io::Error),
-    #[error("File not found '{0}'.")]
-    FilePathIsNotFile(String),
-    #[error("Db connection scheme is invalid '{0}'.")]
-    InvalidConnectionScheme(String),
-    #[error("Db connection host is invalid '{0}'.")]
-    InvalidConnectionHost(String),
 }
 
 #[derive(Debug, PartialEq)]
