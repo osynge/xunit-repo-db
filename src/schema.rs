@@ -1,23 +1,23 @@
 table! {
     bind_environment_keyvalue (id) {
-        id -> Integer,
-        fk_environment -> Integer,
-        fk_keyvalue -> Integer,
+        id -> Int4,
+        fk_environment -> Int4,
+        fk_keyvalue -> Int4,
     }
 }
 
 table! {
     environment (id) {
-        id -> Integer,
-        sk -> Text,
-        hash_keyvalue -> Text,
-        best_before -> Nullable<Integer>,
+        id -> Int4,
+        sk -> Bpchar,
+        hash_keyvalue -> Bpchar,
+        best_before -> Nullable<Int4>,
     }
 }
 
 table! {
     keyvalue (id) {
-        id -> Integer,
+        id -> Int4,
         key -> Text,
         value -> Text,
     }
@@ -25,117 +25,117 @@ table! {
 
 table! {
     project (id) {
-        id -> Integer,
-        sk -> Text,
-        identifier -> Text,
-        human_name -> Text,
+        id -> Int4,
+        sk -> Bpchar,
+        identifier -> Varchar,
+        human_name -> Varchar,
     }
 }
 
 table! {
     run_identifier (id) {
-        id -> Integer,
-        sk -> Text,
-        client_identifier -> Text,
-        created -> BigInt,
-        fk_project -> Integer,
+        id -> Int4,
+        sk -> Bpchar,
+        client_identifier -> Bpchar,
+        created -> Int8,
+        fk_project -> Int4,
     }
 }
 
 table! {
     test_case (id) {
-        id -> Integer,
-        sk -> Text,
+        id -> Int4,
+        sk -> Bpchar,
         name -> Text,
-        fk_test_case_class -> Integer,
-        fk_test_suite -> Integer,
+        fk_test_case_class -> Int4,
+        fk_test_suite -> Int4,
     }
 }
 
 table! {
     test_case_class (id) {
-        id -> Integer,
+        id -> Int4,
         name -> Text,
     }
 }
 
 table! {
     test_case_error (id) {
-        id -> Integer,
-        fk_test_case -> Integer,
-        time -> Nullable<Float>,
+        id -> Int4,
+        fk_test_case -> Int4,
+        time -> Nullable<Float4>,
         error_message -> Nullable<Text>,
         error_type -> Nullable<Text>,
         error_description -> Nullable<Text>,
         system_out -> Nullable<Text>,
         system_err -> Nullable<Text>,
-        fk_test_file_run -> Integer,
+        fk_test_file_run -> Int4,
     }
 }
 
 table! {
     test_case_failure (id) {
-        id -> Integer,
-        fk_test_case -> Integer,
-        time -> Nullable<Float>,
+        id -> Int4,
+        fk_test_case -> Int4,
+        time -> Nullable<Float4>,
         failure_message -> Nullable<Text>,
         failure_type -> Nullable<Text>,
         failure_description -> Nullable<Text>,
         system_out -> Nullable<Text>,
         system_err -> Nullable<Text>,
-        fk_test_file_run -> Integer,
+        fk_test_file_run -> Int4,
     }
 }
 
 table! {
     test_case_pass (id) {
-        id -> Integer,
-        fk_test_case -> Integer,
-        time -> Nullable<Float>,
-        fk_test_file_run -> Integer,
+        id -> Int4,
+        fk_test_case -> Int4,
+        time -> Nullable<Float4>,
+        fk_test_file_run -> Int4,
     }
 }
 
 table! {
     test_case_skipped (id) {
-        id -> Integer,
-        fk_test_case -> Integer,
-        time -> Nullable<Float>,
+        id -> Int4,
+        fk_test_case -> Int4,
+        time -> Nullable<Float4>,
         skipped_message -> Nullable<Text>,
-        fk_test_file_run -> Integer,
+        fk_test_file_run -> Int4,
     }
 }
 
 table! {
     test_file (id) {
-        id -> Integer,
-        directory -> Text,
-        file_name -> Text,
+        id -> Int4,
+        directory -> Varchar,
+        file_name -> Varchar,
     }
 }
 
 table! {
     test_file_run (id) {
-        id -> Integer,
-        sk -> Text,
-        fk_test_file -> Integer,
-        fk_test_run -> Integer,
+        id -> Int4,
+        sk -> Bpchar,
+        fk_test_file -> Int4,
+        fk_test_run -> Int4,
     }
 }
 
 table! {
     test_run (id) {
-        id -> Integer,
-        sk -> Text,
-        created -> BigInt,
-        fk_run_identifier -> Integer,
-        fk_environment -> Integer,
+        id -> Int4,
+        sk -> Bpchar,
+        created -> Int8,
+        fk_run_identifier -> Int4,
+        fk_environment -> Int4,
     }
 }
 
 table! {
     test_suite (id) {
-        id -> Integer,
+        id -> Int4,
         name -> Text,
     }
 }
