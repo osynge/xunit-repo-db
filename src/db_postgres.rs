@@ -33,18 +33,62 @@ mod tests {
     use crate::model::project::ProjectNew;
     use crate::schema::project;
     use diesel::dsl::insert_into;
+    use serde::Deserialize;
     use tempdir;
+
+    #[derive(Deserialize, Debug)]
+    struct DbUrl {
+        password: String,
+        username: String,
+        hostname: String,
+        #[serde(default = "db_url_default_port")]
+        port: u16,
+        database: String,
+    }
+
+    impl DbUrl {
+        fn as_url(&self) -> String {
+            ///postgres://postgres:newpassword@localhost/diesel_demo///
+            format!(
+                "postgres://{}:{}@{}:{}/{}",
+                self.username, self.password, self.hostname, self.port, self.database,
+            )
+        }
+    }
+
+    fn db_url_default_port() -> u16 {
+        5432
+    }
+
+    fn db_url_get() -> String {
+        let prefix = "DB_URL_";
+        let dburl = match envy::prefixed(prefix).from_env::<DbUrl>() {
+            Ok(p) => p,
+            Err(err) => match (err) {
+                envy::Error::MissingValue(p) => {
+                    panic!(
+                        "Missing environment variable: {}{}",
+                        prefix,
+                        p.to_uppercase()
+                    )
+                }
+                envy::Error::Custom(p) => {
+                    panic!("{}", p);
+                }
+            },
+        };
+        println!("{:?}", dburl.as_url());
+        println!("{:?}", dburl);
+        dburl.as_url()
+    }
 
     #[test]
     fn establish_connection_in_mem() {
         use crate::schema::project::dsl::*;
-        let conn = establish_connection_pool(
-            "postgres://postgres:newpassword@localhost/diesel_demo",
-            true,
-        )
-        .unwrap()
-        .get()
-        .unwrap();
+        let conn = establish_connection_pool(db_url_get().as_str(), true)
+            .unwrap()
+            .get()
+            .unwrap();
         conn.begin_test_transaction();
 
         let new_link = ProjectNew {
@@ -60,11 +104,11 @@ mod tests {
     #[test]
     fn establish_connection_2() {
         use crate::schema::project::dsl::*;
-        let conn = establish_connection("postgres://postgres:newpassword@localhost/diesel_demo");
-
+        let conn = establish_connection(db_url_get().as_str());
+        run_migrations(&conn);
         let new_link2 = ProjectNew {
-            sk: "&jelly",
-            identifier: "&swig",
+            sk: "&jellyxx",
+            identifier: "&swigdfsfsd",
             human_name: "&song",
         };
         let flink = insert_into(project)
