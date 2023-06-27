@@ -104,12 +104,18 @@ mod tests {
     #[test]
     fn establish_connection_2() {
         use crate::schema::project::dsl::*;
-        let conn = establish_connection(db_url_get().as_str());
-        run_migrations(&conn);
+        //let conn = establish_connection(db_url_get().as_str());
+        //run_migrations(&conn);
+        let conn = establish_connection_pool(db_url_get().as_str(), true)
+            .unwrap()
+            .get()
+            .unwrap();
+
+        conn.begin_test_transaction();
         let new_link2 = ProjectNew {
-            sk: "&jellyxx",
-            identifier: "&swigdfsfsd",
-            human_name: "&song",
+            sk: "&jellysdasdasdxx",
+            identifier: "&swigdfssdffsd",
+            human_name: "&sosdfsdng",
         };
         let flink = insert_into(project)
             .values(&new_link2)
