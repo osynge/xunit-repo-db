@@ -1,11 +1,11 @@
-use crate::model::test_case;
-use crate::model::test_file_run;
+use crate::model::test_case::TestCase;
+use crate::model::test_file_run::TestFileRun;
 use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[table_name = "test_case_pass"]
-#[belongs_to(test_case::TestCase, foreign_key = "fk_test_case")]
-#[belongs_to(test_file_run::TestFileRun, foreign_key = "fk_test_file_run")]
+#[belongs_to(TestCase, foreign_key = "fk_test_case")]
+#[belongs_to(TestFileRun, foreign_key = "fk_test_file_run")]
 pub struct TestCasePass {
     pub id: i32,
     pub fk_test_case: i32,
