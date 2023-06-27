@@ -1,9 +1,9 @@
-use crate::model::project;
+use crate::model::project::Project;
 use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[table_name = "run_identifier"]
-#[belongs_to(project::Project, foreign_key = "fk_project")]
+#[belongs_to(Project, foreign_key = "fk_project")]
 pub struct RunIdentifier {
     pub id: i32,
     pub sk: String,

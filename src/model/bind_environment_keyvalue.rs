@@ -1,11 +1,11 @@
-use crate::model::environment;
-use crate::model::keyvalue;
+use crate::model::environment::Environment;
+use crate::model::keyvalue::KeyValue;
 use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[table_name = "bind_environment_keyvalue"]
-#[belongs_to(environment::Environment, foreign_key = "fk_environment")]
-#[belongs_to(keyvalue::KeyValue, foreign_key = "fk_keyvalue")]
+#[belongs_to(Environment, foreign_key = "fk_environment")]
+#[belongs_to(KeyValue, foreign_key = "fk_keyvalue")]
 pub struct BindEnvironmentKeyvalue {
     pub id: i32,
     pub fk_environment: i32,

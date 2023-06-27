@@ -1,11 +1,11 @@
-use crate::model::test_file;
-use crate::model::test_run;
+use crate::model::test_file::TestFile;
+use crate::model::test_run::TestRun;
 use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[table_name = "test_file_run"]
-#[belongs_to(test_file::TestFile, foreign_key = "fk_test_file")]
-#[belongs_to(test_run::TestRun, foreign_key = "fk_test_run")]
+#[belongs_to(TestFile, foreign_key = "fk_test_file")]
+#[belongs_to(TestRun, foreign_key = "fk_test_run")]
 pub struct TestFileRun {
     pub id: i32,
     pub sk: String,

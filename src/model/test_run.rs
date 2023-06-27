@@ -1,5 +1,5 @@
-use crate::model::environment;
-use crate::model::run_identifier;
+use crate::model::environment::Environment;
+use crate::model::run_identifier::RunIdentifier;
 use crate::schema::*;
 
 /*
@@ -16,8 +16,8 @@ CREATE TABLE test_run (
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[table_name = "test_run"]
-#[belongs_to(run_identifier::RunIdentifier, foreign_key = "fk_run_identifier")]
-#[belongs_to(environment::Environment, foreign_key = "fk_environment")]
+#[belongs_to(RunIdentifier, foreign_key = "fk_run_identifier")]
+#[belongs_to(Environment, foreign_key = "fk_environment")]
 pub struct TestRun {
     pub id: i32,
     pub sk: String,

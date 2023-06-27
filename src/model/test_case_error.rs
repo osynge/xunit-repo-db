@@ -1,9 +1,9 @@
-use crate::model::test_run;
+use crate::model::test_run::TestRun;
 use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[table_name = "test_case_error"]
-#[belongs_to(test_run::TestRun, foreign_key = "fk_test_file_run")]
+#[belongs_to(TestRun, foreign_key = "fk_test_file_run")]
 pub struct TestCaseError {
     pub id: i32,
     pub fk_test_case: i32,
