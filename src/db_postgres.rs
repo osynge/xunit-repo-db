@@ -3,20 +3,24 @@ use crate::Pool;
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use diesel::r2d2::ConnectionManager;
+use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+use thiserror::Error;
+use url::{Host, Url};
 
-embed_migrations!();
-pub fn run_migrations(conn: &PgConnection) {
-    let _ = embedded_migrations::run(conn);
+pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
+
+fn run_migration(conn: &mut PgConnection) {
+    conn.run_pending_migrations(MIGRATIONS).unwrap();
 }
 
 pub fn establish_connection_pool(db_url: &str, create_db: bool) -> Result<Pool, ConnectionError> {
     if create_db {
-        let connection = PgConnection::establish(&db_url).unwrap();
-        run_migrations(&connection);
+        let mut connection = PgConnection::establish(&db_url).unwrap();
+        run_migration(&mut connection);
     };
     let manager = ConnectionManager::<PgConnection>::new(db_url);
     let database_pool = Pool::new(manager).expect("Postgres connection pool could not be created");
-    run_migrations(&database_pool.get().unwrap());
+    run_migration(&mut database_pool.get().unwrap());
     Ok(database_pool)
 }
 
@@ -83,7 +87,7 @@ mod tests {
     #[test]
     fn establish_connection_in_mem() {
         use crate::schema::project::dsl::*;
-        let conn = establish_connection_pool(db_url_get().as_str(), true)
+        let mut conn = establish_connection_pool(db_url_get().as_str(), true)
             .unwrap()
             .get()
             .unwrap();
@@ -96,7 +100,7 @@ mod tests {
         };
         let flink = insert_into(project)
             .values(&new_link)
-            .execute(&conn)
+            .execute(&mut conn)
             .expect("Error saving new post");
     }
     #[test]
@@ -104,7 +108,7 @@ mod tests {
         use crate::schema::project::dsl::*;
         //let conn = establish_connection(db_url_get().as_str());
         //run_migrations(&conn);
-        let conn = establish_connection_pool(db_url_get().as_str(), true)
+        let mut conn = establish_connection_pool(db_url_get().as_str(), true)
             .unwrap()
             .get()
             .unwrap();
@@ -121,7 +125,7 @@ mod tests {
         };
         let _ = insert_into(project)
             .values(&new_link2)
-            .execute(&conn)
+            .execute(&mut conn)
             .expect("Error saving new post");
     }
 }
