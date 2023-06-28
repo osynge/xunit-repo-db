@@ -2,7 +2,7 @@ use crate::model::project::Project;
 use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
-#[table_name = "run_identifier"]
+#[diesel(table_name = run_identifier)]
 #[belongs_to(Project, foreign_key = "fk_project")]
 pub struct RunIdentifier {
     pub id: i32,
@@ -13,7 +13,7 @@ pub struct RunIdentifier {
 }
 
 #[derive(Debug, Insertable)]
-#[table_name = "run_identifier"]
+#[diesel(table_name = run_identifier)]
 pub struct RunIdentifierNew<'a> {
     pub sk: &'a str,
     pub client_identifier: &'a str,
