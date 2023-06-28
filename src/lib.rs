@@ -1,6 +1,5 @@
 #[macro_use]
 extern crate diesel;
-#[macro_use]
 extern crate diesel_migrations;
 #[macro_use]
 extern crate serde_derive;
@@ -32,5 +31,5 @@ pub enum ConnectionError {
 }
 
 pub fn establish_connection_pool(input: &str, create_db: bool) -> Result<Pool, ConnectionError> {
-    return db_postgres::establish_connection_pool(input, create_db);
+    db_postgres::establish_connection_pool(input, create_db)
 }
