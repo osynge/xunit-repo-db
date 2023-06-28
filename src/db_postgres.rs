@@ -13,7 +13,7 @@ fn run_migration(conn: &mut PgConnection) {
 
 pub fn establish_connection_pool(db_url: &str, create_db: bool) -> Result<Pool, ConnectionError> {
     if create_db {
-        let mut connection = PgConnection::establish(&db_url).unwrap();
+        let mut connection = PgConnection::establish(db_url).unwrap();
         run_migration(&mut connection);
     };
     let manager = ConnectionManager::<PgConnection>::new(db_url);
