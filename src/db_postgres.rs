@@ -27,7 +27,10 @@ mod tests {
     use super::*;
     use crate::model::project::ProjectNew;
     use diesel::dsl::insert_into;
+    use std::sync::Mutex;
     use uuid;
+
+    static TEST_MUTEX: Mutex<i32> = Mutex::new(1);
 
     #[derive(Deserialize, Debug)]
     struct DbUrl {
@@ -85,6 +88,7 @@ mod tests {
     #[test]
     fn establish_connection_in_mem() {
         use crate::schema::project::dsl::*;
+        let _guard = TEST_MUTEX.lock().unwrap();
         let mut conn = establish_connection_pool(db_url_get().as_str(), true)
             .unwrap()
             .get()
@@ -106,6 +110,7 @@ mod tests {
     #[test]
     fn establish_connection_2() {
         use crate::schema::project::dsl::*;
+        let _guard = TEST_MUTEX.lock().unwrap();
         //let conn = establish_connection(db_url_get().as_str());
         //run_migrations(&conn);
         let mut conn = establish_connection_pool(db_url_get().as_str(), true)
