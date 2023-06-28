@@ -1,15 +1,12 @@
-use crate::schema::*;
 use crate::ConnectionError;
 use crate::Pool;
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use diesel::r2d2::ConnectionManager;
-use thiserror::Error;
-use url::{Host, Url};
 
 embed_migrations!();
 pub fn run_migrations(conn: &PgConnection) {
-    embedded_migrations::run(conn);
+    let _ = embedded_migrations::run(conn);
 }
 
 pub fn establish_connection_pool(db_url: &str, create_db: bool) -> Result<Pool, ConnectionError> {
@@ -23,18 +20,12 @@ pub fn establish_connection_pool(db_url: &str, create_db: bool) -> Result<Pool, 
     Ok(database_pool)
 }
 
-pub fn establish_connection(database_url: &str) -> PgConnection {
-    PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::model::project::ProjectNew;
-    use crate::schema::project;
     use diesel::dsl::insert_into;
-    use serde::Deserialize;
-    use tempdir;
+    use uuid;
 
     #[derive(Deserialize, Debug)]
     struct DbUrl {
@@ -82,6 +73,13 @@ mod tests {
         dburl.as_url()
     }
 
+    fn get_uuid_as_string() -> String {
+        let uuid_human_name = uuid::Uuid::new_v4();
+        let mut long_string = uuid_human_name.to_string();
+        long_string.truncate(32);
+        long_string
+    }
+
     #[test]
     fn establish_connection_in_mem() {
         use crate::schema::project::dsl::*;
@@ -111,13 +109,17 @@ mod tests {
             .get()
             .unwrap();
 
+        let str_sk = get_uuid_as_string();
+        let str_identifier = get_uuid_as_string();
+        let uuid_human_name = get_uuid_as_string();
+
         conn.begin_test_transaction();
         let new_link2 = ProjectNew {
-            sk: "&jellysdasdasdxx",
-            identifier: "&swigdfssdffsd",
-            human_name: "&sosdfsdng",
+            sk: &str_sk,
+            identifier: &str_identifier,
+            human_name: &uuid_human_name,
         };
-        let flink = insert_into(project)
+        let _ = insert_into(project)
             .values(&new_link2)
             .execute(&conn)
             .expect("Error saving new post");
