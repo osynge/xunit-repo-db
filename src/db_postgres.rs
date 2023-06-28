@@ -4,8 +4,6 @@ use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use diesel::r2d2::ConnectionManager;
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
-use thiserror::Error;
-use url::{Host, Url};
 
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
 
