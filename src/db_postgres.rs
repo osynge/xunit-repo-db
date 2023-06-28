@@ -90,11 +90,13 @@ mod tests {
             .get()
             .unwrap();
         conn.begin_test_transaction();
-
+        let str_sk = get_uuid_as_string();
+        let str_identifier = get_uuid_as_string();
+        let uuid_human_name = get_uuid_as_string();
         let new_link = ProjectNew {
-            sk: "&toad",
-            identifier: "&frog",
-            human_name: "&bat",
+            sk: &str_sk,
+            identifier: &str_identifier,
+            human_name: &uuid_human_name,
         };
         let flink = insert_into(project)
             .values(&new_link)
