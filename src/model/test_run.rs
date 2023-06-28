@@ -15,7 +15,7 @@ CREATE TABLE test_run (
 ); */
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
-#[table_name = "test_run"]
+#[diesel(table_name = test_run)]
 #[belongs_to(RunIdentifier, foreign_key = "fk_run_identifier")]
 #[belongs_to(Environment, foreign_key = "fk_environment")]
 pub struct TestRun {
@@ -27,7 +27,7 @@ pub struct TestRun {
 }
 
 #[derive(Debug, Insertable)]
-#[table_name = "test_run"]
+#[diesel(table_name = test_run)]
 pub struct TestRunNew<'a> {
     pub sk: &'a str,
     pub created: i64,

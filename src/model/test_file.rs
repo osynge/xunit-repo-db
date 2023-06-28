@@ -8,7 +8,7 @@ pub struct TestFile {
 }
 
 #[derive(Debug, Insertable)]
-#[table_name = "test_file"]
+#[diesel(table_name = test_file)]
 pub struct TestFileNew<'a> {
     pub directory: &'a str,
     pub file_name: &'a str,

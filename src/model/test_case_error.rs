@@ -2,7 +2,7 @@ use crate::model::test_run::TestRun;
 use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
-#[table_name = "test_case_error"]
+#[diesel(table_name = test_case_error)]
 #[belongs_to(TestRun, foreign_key = "fk_test_file_run")]
 pub struct TestCaseError {
     pub id: i32,
@@ -17,7 +17,7 @@ pub struct TestCaseError {
 }
 
 #[derive(Debug, Insertable)]
-#[table_name = "test_case_error"]
+#[diesel(table_name = test_case_error)]
 pub struct TestCaseErrorNew<'a> {
     pub fk_test_case: i32,
     pub time: Option<&'a f32>,

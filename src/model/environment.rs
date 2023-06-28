@@ -10,7 +10,7 @@ pub struct Environment {
 }
 
 #[derive(Debug, Insertable)]
-#[table_name = "environment"]
+#[diesel(table_name = environment)]
 pub struct EnvironmentNew<'a> {
     pub sk: &'a str,
     pub hash_keyvalue: &'a str,

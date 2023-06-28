@@ -7,7 +7,7 @@ pub struct TestCaseClass {
 }
 
 #[derive(Debug, Insertable)]
-#[table_name = "test_case_class"]
+#[diesel(table_name = test_case_class)]
 pub struct TestCaseClassNew<'a> {
     pub name: &'a str,
 }

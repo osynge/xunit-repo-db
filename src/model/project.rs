@@ -9,7 +9,7 @@ pub struct Project {
 }
 
 #[derive(Debug, Insertable)]
-#[table_name = "project"]
+#[diesel(table_name = project)]
 pub struct ProjectNew<'a> {
     pub sk: &'a str,
     pub identifier: &'a str,

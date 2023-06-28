@@ -3,7 +3,7 @@ use crate::model::keyvalue::KeyValue;
 use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
-#[table_name = "bind_environment_keyvalue"]
+#[diesel(table_name = bind_environment_keyvalue)]
 #[belongs_to(Environment, foreign_key = "fk_environment")]
 #[belongs_to(KeyValue, foreign_key = "fk_keyvalue")]
 pub struct BindEnvironmentKeyvalue {
@@ -13,7 +13,7 @@ pub struct BindEnvironmentKeyvalue {
 }
 
 #[derive(Debug, Insertable)]
-#[table_name = "bind_environment_keyvalue"]
+#[diesel(table_name = bind_environment_keyvalue)]
 pub struct BindEnvironmentKeyvalueNew {
     pub fk_environment: i32,
     pub fk_keyvalue: i32,

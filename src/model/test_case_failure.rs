@@ -3,7 +3,7 @@ use crate::model::test_file_run::TestFileRun;
 use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
-#[table_name = "test_case_failure"]
+#[diesel(table_name = test_case_failure)]
 #[belongs_to(TestCase, foreign_key = "fk_test_case")]
 #[belongs_to(TestFileRun, foreign_key = "fk_test_file_run")]
 pub struct TestCaseFailure {
@@ -19,7 +19,7 @@ pub struct TestCaseFailure {
 }
 
 #[derive(Debug, Insertable)]
-#[table_name = "test_case_failure"]
+#[diesel(table_name = test_case_failure)]
 pub struct TestCaseFailureNew<'a> {
     pub fk_test_case: i32,
     pub time: Option<&'a f32>,

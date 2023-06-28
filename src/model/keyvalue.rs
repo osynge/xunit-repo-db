@@ -8,7 +8,7 @@ pub struct KeyValue {
 }
 
 #[derive(Debug, Insertable)]
-#[table_name = "keyvalue"]
+#[diesel(table_name = keyvalue)]
 pub struct KeyValueNew<'a> {
     pub key: &'a str,
     pub value: &'a str,

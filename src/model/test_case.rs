@@ -3,7 +3,7 @@ use crate::model::test_suite::TestSuite;
 use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
-#[table_name = "test_case"]
+#[diesel(table_name = test_case)]
 #[belongs_to(TestClass, foreign_key = "fk_test_case_class")]
 #[belongs_to(TestSuite, foreign_key = "fk_test_suite")]
 pub struct TestCase {
@@ -15,7 +15,7 @@ pub struct TestCase {
 }
 
 #[derive(Debug, Insertable)]
-#[table_name = "test_case"]
+#[diesel(table_name = test_case)]
 pub struct TestCaseNew<'a> {
     pub sk: &'a str,
     pub name: &'a str,
