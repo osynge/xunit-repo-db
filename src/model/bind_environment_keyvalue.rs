@@ -4,8 +4,8 @@ use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[diesel(table_name = bind_environment_keyvalue)]
-#[belongs_to(Environment, foreign_key = "fk_environment")]
-#[belongs_to(KeyValue, foreign_key = "fk_keyvalue")]
+#[diesel(belongs_to(Environment, foreign_key = fk_environment))]
+#[diesel(belongs_to(KeyValue, foreign_key = fk_keyvalue))]
 pub struct BindEnvironmentKeyvalue {
     pub id: i32,
     pub fk_environment: i32,

@@ -16,8 +16,8 @@ CREATE TABLE test_run (
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[diesel(table_name = test_run)]
-#[belongs_to(RunIdentifier, foreign_key = "fk_run_identifier")]
-#[belongs_to(Environment, foreign_key = "fk_environment")]
+#[diesel(belongs_to(RunIdentifier, foreign_key = fk_run_identifier))]
+#[diesel(belongs_to(Environment, foreign_key = fk_environment))]
 pub struct TestRun {
     pub id: i32,
     pub sk: String,

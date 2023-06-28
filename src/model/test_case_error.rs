@@ -3,7 +3,7 @@ use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[diesel(table_name = test_case_error)]
-#[belongs_to(TestRun, foreign_key = "fk_test_file_run")]
+#[diesel(belongs_to(TestRun, foreign_key = fk_test_file_run))]
 pub struct TestCaseError {
     pub id: i32,
     pub fk_test_case: i32,

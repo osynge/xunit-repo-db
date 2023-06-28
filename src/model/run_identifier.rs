@@ -3,7 +3,7 @@ use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[diesel(table_name = run_identifier)]
-#[belongs_to(Project, foreign_key = "fk_project")]
+#[diesel(belongs_to(Project, foreign_key = fk_project))]
 pub struct RunIdentifier {
     pub id: i32,
     pub sk: String,

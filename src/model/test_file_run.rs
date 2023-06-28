@@ -4,8 +4,8 @@ use crate::schema::*;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Associations)]
 #[diesel(table_name = test_file_run)]
-#[belongs_to(TestFile, foreign_key = "fk_test_file")]
-#[belongs_to(TestRun, foreign_key = "fk_test_run")]
+#[diesel(belongs_to(TestFile, foreign_key = fk_test_file))]
+#[diesel(belongs_to(TestRun, foreign_key = fk_test_run))]
 pub struct TestFileRun {
     pub id: i32,
     pub sk: String,
