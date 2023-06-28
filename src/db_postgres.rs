@@ -6,7 +6,8 @@ use diesel::r2d2::ConnectionManager;
 
 embed_migrations!();
 pub fn run_migrations(conn: &PgConnection) {
-    let _ = embedded_migrations::run(conn);
+    #![allow(unused_must_use)]
+    embedded_migrations::run(conn);
 }
 
 pub fn establish_connection_pool(db_url: &str, create_db: bool) -> Result<Pool, ConnectionError> {
