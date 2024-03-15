@@ -7,7 +7,7 @@ license = "MIT OR Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-diesel = { version = "2.1.0", features = ["r2d2", "postgres"]}
+diesel = { version = "2.1.5", features = ["r2d2", "postgres"]}
 dotenv = "0.15.0"
 serde = "1.0"
 serde_derive = "1.0"
