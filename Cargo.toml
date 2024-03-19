@@ -15,7 +15,7 @@ serde_json = "1.0"
 anyhow = "1.0"
 chrono = "0.4.26"
 url = "2.4.0"
-uuid = { version = "1.4", features = ["serde", "v4", "fast-rng", "macro-diagnostics"] }
+uuid = { version = "1.8", features = ["serde", "v4", "fast-rng", "macro-diagnostics"] }
 diesel_migrations = "2.1.0"
 thiserror = "1"
 
