@@ -23,4 +23,4 @@ thiserror = "1"
 tempdir = "0.3"
 
 # Env configuration.
-envy = "0.4"
+envy = "0.4.2"
